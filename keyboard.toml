@@ -1,35 +1,76 @@
 # Documentation: https://rmk.rs/docs/configuration.html
 [keyboard]
-name = "RMK Keyboard"
-product_name = "RMK Keyboard"
+name = "pkkblab"
+product_name = "pkkblab"
 vendor_id = 0x4c4b
 product_id = 0x4643
-manufacturer = "RMK"
-chip = "rp2040"
-
-[matrix]
-# Row and col pins are mandatory
-row_pins = ["PIN_6", "PIN_7", "PIN_8", "PIN_9"]
-col_pins = ["PIN_19", "PIN_20", "PIN_21"]
-
-# RMK uses col2row as the default matrix diode direction, if you want to use a row2col matrix, add `row2col = true`
-# row2col = true
+manufacturer = "rmk"
+chip = "nrf52840"
 
 [layout]
 rows = 4
-cols = 3
-layers = 2
+cols = 5
+layers = 8
 keymap = [
     [
-        ["A", "B", "C"],
-        ["Kc1", "Kc2", "Kc3"],
-        ["LCtrl", "MO(1)", "LShift"],
-        ["OSL(1)", "LT(2, Kc9)", "LM(1, LShift | LGui)"]
+        ["Q", "W", "E", "R", "T", "Y", "U", "I","O","P"],
+        ["A", "S", "D", "F", "G", "H", "J", "K","L","Enter"],
+        ["Z", "X", "C", "V", "B", "N", "M","Comma", "Dot", "Slash","Delete"],
+        ["LCtrl", "LGui", "LAlt", "LShift", "LT(1, Space)", "LT(2, Space)", "Left", "Down", "Right", "Up"]
     ],
     [
-        ["_", "TT(1)", "TG(2)"],
-        ["_", "_", "_"],
-        ["_", "_", "_"],
-        ["_", "_", "_"]
+        ["Kc1", "Kc2", "Kc3", "Kc4", "Kc5", "Kc6", "Kc7", "Kc8", "Kc9", "Kc0"],
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
     ],
 ]
+
+[rmk]
+# Maximum number of combos keyboard can store
+combo_max_num = 15
+# Maximum number of keys pressed simultaneously in a combo
+combo_max_length = 4
+# Default debounce time in milliseconds  
+debounce_time = 5
+
+[host]
+# Unlock combination: simultaneous press of specified keys
+# Format: [[row, col], [row, col], ...]
+unlock_keys = [[0, 0], [0, 1]]  # Keys at (row=0,col=0) and (row=0,col=1)
+
+[ble]
+enabled = true
+# 电量报告
+battery_adc_pin = "P0_04"
+adc_divider_measured = 2000    # R2 = 2MΩ = 2000kΩ
+adc_divider_total = 2820       # R1+R2 = 820kΩ+2MΩ = 2820kΩ
+default_tx_power = 8
+ble_use_2m_phy = true
+
+[split]
+connection = "ble"
+
+[split.central]
+rows = 4
+cols = 5
+row_offset = 0
+col_offset = 0
+ble_addr = [0x7e, 0xfe, 0x73, 0x9e, 0x66, 0xe3]
+[split.central.matrix]
+matrix_type = "normal"
+col_pins = ["P0_18", "P1_15", "P0_14", "P0_16", "P0_10"]
+row_pins = ["P0_09", "P1_19", "P0_20", "P0_21"]
+# row2col = true
+
+[[split.peripheral]]
+rows = 4
+cols = 6
+row_offset = 0
+col_offset = 5
+ble_addr = [0x18, 0xe2, 0x21, 0x80, 0xc0, 0xc7]
+[split.peripheral.matrix]
+matrix_type = "normal"
+col_pins = ["P0_18", "P1_15", "P0_14", "P0_16", "P0_10"]
+row_pins = ["P0_09", "P1_19", "P0_20", "P0_21"]
+# row2col = true
