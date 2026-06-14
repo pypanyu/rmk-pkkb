@@ -65,7 +65,7 @@ row_pins = ["P0_09", "P1_19", "P0_20", "P0_21"]
 
 [[split.peripheral]]
 rows = 4
-cols = 6
+cols = 5
 row_offset = 0
 col_offset = 5
 ble_addr = [0x18, 0xe2, 0x21, 0x80, 0xc0, 0xc7]
