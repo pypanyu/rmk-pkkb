@@ -15,7 +15,7 @@ keymap = [
     [
         ["Q", "W", "E", "R", "T", "Y", "U", "I","O","P"],
         ["A", "S", "D", "F", "G", "H", "J", "K","L","Enter"],
-        ["Z", "X", "C", "V", "B", "N", "M","Comma", "Dot", "Slash","Delete"],
+        ["Z", "X", "C", "V", "B", "N", "M", "RShift", "Slash","Delete"],
         ["LCtrl", "LGui", "LAlt", "LShift", "LT(1, Space)", "LT(2, Space)", "Left", "Down", "Right", "Up"]
     ],
     [
@@ -59,8 +59,8 @@ col_offset = 0
 ble_addr = [0x7e, 0xfe, 0x73, 0x9e, 0x66, 0xe3]
 [split.central.matrix]
 matrix_type = "normal"
-col_pins = ["P0_18", "P1_15", "P0_14", "P0_16", "P0_10"]
-row_pins = ["P0_09", "P1_19", "P0_20", "P0_21"]
+col_pins = ["P0_18", "P0_15", "P0_14", "P0_16", "P0_10"]
+row_pins = ["P0_09", "P0_19", "P0_20", "P0_21"]
 # row2col = true
 
 [[split.peripheral]]
@@ -71,6 +71,6 @@ col_offset = 5
 ble_addr = [0x18, 0xe2, 0x21, 0x80, 0xc0, 0xc7]
 [split.peripheral.matrix]
 matrix_type = "normal"
-col_pins = ["P0_18", "P1_15", "P0_14", "P0_16", "P0_10"]
-row_pins = ["P0_09", "P1_19", "P0_20", "P0_21"]
+col_pins = ["P0_18", "P0_15", "P0_14", "P0_16", "P0_10"]
+row_pins = ["P0_09", "P0_19", "P0_20", "P0_21"]
 # row2col = true
