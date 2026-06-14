@@ -5,7 +5,7 @@ product_name = "pkkblab"
 vendor_id = 0x4c4b
 product_id = 0x4643
 manufacturer = "rmk"
-chip = "nrf52840"
+chip = "nice_nano_v2"
 
 [layout]
 rows = 4
