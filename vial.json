@@ -1,136 +1,165 @@
 {
+  "keyboard": {
     "name": "pkkblab",
-    "vendorId": "0x4C4B",
-    "productId": "0x4643",
-    "lighting": "none",
-    "matrix": {
+    "product_name": "pkkblab",
+    "vendor_id": 19403,
+    "product_id": 17987,
+    "manufacturer": "rmk",
+    "chip": "nrf52840",
+    "custom_keycodes": [
+      {
+        "name": "BT0",
+        "title": "Bluetooth Channel 0",
+        "short_name": "BT0"
+      },
+      {
+        "name": "BT1",
+        "title": "Bluetooth Channel 1",
+        "short_name": "BT1"
+      },
+      {
+        "name": "BT2",
+        "title": "Bluetooth Channel 2",
+        "short_name": "BT2"
+      },
+      {
+        "name": "BT3",
+        "title": "Bluetooth Channel 3",
+        "short_name": "BT3"
+      },
+      {
+        "name": "BT4",
+        "title": "Bluetooth Channel 4",
+        "short_name": "BT4"
+      },
+      {
+        "name": "BT5",
+        "title": "Bluetooth Channel 5",
+        "short_name": "BT5"
+      },
+      {
+        "name": "BT6",
+        "title": "Bluetooth Channel 6",
+        "short_name": "BT6"
+      },
+      {
+        "name": "BT7",
+        "title": "Bluetooth Channel 7",
+        "short_name": "BT7"
+      },
+      {
+        "name": "NEXT_BT",
+        "title": "Switch to the next Bluetooth channel",
+        "short_name": "Next\\nBT"
+      },
+      {
+        "name": "PREV_BT",
+        "title": "Switch to the previous Bluetooth channel",
+        "short_name": "Prev\\nBT"
+      },
+      {
+        "name": "CLR_BT",
+        "title": "Clear bond info for current channel",
+        "short_name": "Clear\\nBT"
+      },
+      {
+        "name": "SWITCH",
+        "title": "Switch default output mode between USB/BLE",
+        "short_name": "Switch\\nOutput"
+      }
+    ]
+  },
+  "layout": {
+    "rows": 4,
+    "cols": 10,
+    "layers": 8,
+    "keymap": [
+      [
+        ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
+        ["A", "S", "D", "F", "G", "H", "J", "K", "L", "Enter"],
+        ["Z", "X", "C", "V", "B", "N", "M", "E", "R", "T"],
+        ["LCtrl", "LGui", "LAlt", "LShift", "LT(1, Space)", "Q", "W", "E", "R", "T"]
+      ],
+      [
+        ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
+      ],
+      [
+        ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
+      ],
+      [
+        ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
+      ],
+      [
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
+      ],
+      [
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
+      ],
+      [
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
+      ],
+      [
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
+      ]
+    ]
+  },
+  "rmk": {
+    "combo_max_num": 15,
+    "combo_max_length": 4,
+    "debounce_time": 5
+  },
+  "split": {
+    "connection": "ble",
+    "central": {
+      "rows": 4,
+      "cols": 5,
+      "row_offset": 0,
+      "col_offset": 0,
+      "ble_addr": [24, 226, 33, 128, 192, 199],
+      "matrix": {
+        "matrix_type": "normal",
+        "col_pins": ["P0_21", "P0_15", "P0_14", "P0_16", "P0_10"],
+        "row_pins": ["P0_09", "P0_24", "P0_23", "P0_22"]
+      }
+    },
+    "peripheral": [
+      {
         "rows": 4,
-        "cols": 10
-    },
-    "customKeycodes": [
-    {
-      "name": "BT0",
-      "title": "Bluetooth Channel 0",
-      "shortName": "BT0"
-    },
-    {
-      "name": "BT1",
-      "title": "Bluetooth Channel 1",
-      "shortName": "BT1"
-    },
-    {
-      "name": "BT2",
-      "title": "Bluetooth Channel 2",
-      "shortName": "BT2"
-    },
-    {
-      "name": "BT3",
-      "title": "Bluetooth Channel 3",
-      "shortName": "BT3"
-    },
-    {
-      "name": "BT4",
-      "title": "Bluetooth Channel 4",
-      "shortName": "BT4"
-    },
-    {
-      "name": "BT5",
-      "title": "Bluetooth Channel 5",
-      "shortName": "BT5"
-    },
-    {
-      "name": "BT6",
-      "title": "Bluetooth Channel 6",
-      "shortName": "BT6"
-    },
-    {
-      "name": "BT7",
-      "title": "Bluetooth Channel 7",
-      "shortName": "BT7"
-    },
-    {
-      "name": "NEXT_BT",
-      "title": "Switch to the next Bluetooth channel",
-      "shortName": "Next\nBT"
-    },
-    {
-      "name": "PREV_BT",
-      "title": "Switch to the previous Bluetooth channel",
-      "shortName": "Prev\nBT"
-    },
-    {
-      "name": "CLR_BT",
-      "title": "Clear bond info for current channel",
-      "shortName": "Clear\nBT"
-    },
-    {
-      "name": "SWITCH",
-      "title": "Switch default output mode between USB/BLE",
-      "shortName": "Switch\nOutput"
-    }
-  ],
-    "layouts": {
-        "keymap": [
-             [
-    "0,0",
-    "0,1",
-    "0,2",
-    "0,3",
-    "0,4",
-    {
-      "x": 1.25
-    },
-    "0,5",
-    "0,6",
-    "0,7",
-    "0,8",
-    "0,9"
-  ],
-  [
-    "1,0",
-    "1,1",
-    "1,2",
-    "1,3",
-    "1,4",
-    {
-      "x": 1.25
-    },
-    "1,5",
-    "1,6",
-    "1,7",
-    "1,8",
-    "1,9"
-  ],
-  [
-    "2,0",
-    "2,1",
-    "2,2",
-    "2,3",
-    "2,4",
-    {
-      "x": 1.25
-    },
-    "2,5",
-    "2,6",
-    "2,7",
-    "2,8",
-    "2,9"
-  ],
-  [
-    "3,0",
-    "3,1",
-    "3,2",
-    "3,3",
-    "3,4",
-    {
-      "x": 1.25
-    },
-    "3,5",
-    "3,6",
-    "3,7",
-    "3,8",
-    "3,9"
-  ]
-        ]
-    }
+        "cols": 5,
+        "row_offset": 0,
+        "col_offset": 5,
+        "ble_addr": [126, 254, 115, 158, 102, 227],
+        "matrix": {
+          "matrix_type": "normal",
+          "col_pins": ["P0_21", "P0_15", "P0_14", "P0_16", "P0_10"],
+          "row_pins": ["P0_09", "P0_24", "P0_23", "P0_22"]
+        }
+      }
+    ]
+  },
+  "ble": {
+    "enabled": true,
+    "battery_adc_pin": "vddh"
+  }
 }
