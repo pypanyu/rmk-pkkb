@@ -106,7 +106,7 @@ row_pins = ["P1_06", "P0_02", "P0_29", "P0_31"]
 rows = 4
 cols = 5
 row_offset = 0
-col_offset = 0
+col_offset = 5
 ble_addr = [0x7e, 0xfe, 0x73, 0x9e, 0x66, 0xe3]
 [split.peripheral.matrix]
 matrix_type = "normal"
