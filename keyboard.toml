@@ -17,7 +17,7 @@ keymap = [
         ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
         ["A", "S", "D", "F", "G", "H", "J", "K", "L", "Enter"],
         ["Z", "X", "C", "V", "B", "N", "M", "E", "R", "T"],
-        ["LCtrl", "LGui", "LAlt", "LShift", "LT(1, Space)", "LT(2, Space)", "RAlt", "E", "R", "T"]
+        ["LCtrl", "1", "LAlt", "LShift", "Space", "LT(2, Space)", "RAlt", "E", "R", "T"]
     ],
     # Layer 1 (Left half only)
     [
@@ -80,12 +80,7 @@ debounce_time = 5
 
 [ble]
 enabled = true
-# 电量报告
-battery_adc_pin = "P0_04"
-adc_divider_measured = 2000    # R2 = 2MΩ = 2000kΩ
-adc_divider_total = 2820       # R1+R2 = 820kΩ+2MΩ = 2820kΩ
-default_tx_power = 8
-ble_use_2m_phy = true
+battery_adc_pin = "vddh"
 
 [split]
 connection = "ble"
