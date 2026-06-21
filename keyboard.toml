@@ -72,16 +72,11 @@ keymap = [
 
 [rmk]
 # Maximum number of combos keyboard can store
-combo_max_num = 15
+combo_max_num = 25
 # Maximum number of keys pressed simultaneously in a combo
 combo_max_length = 4
 # Default debounce time in milliseconds  
 debounce_time = 5
-
-[host]
-# Unlock combination: simultaneous press of specified keys
-# Format: [[row, col], [row, col], ...]
-unlock_keys = [[0, 0], [0, 1]]  # Keys at (row=0,col=0) and (row=0,col=1)
 
 [ble]
 enabled = true
@@ -103,8 +98,8 @@ col_offset = 0
 ble_addr = [0x7e, 0xfe, 0x73, 0x9e, 0x66, 0xe3]
 [split.central.matrix]
 matrix_type = "normal"
-col_pins = ["P0_09", "P0_10", "P0_11", "P0_12", "P0_13"]
-row_pins = ["P0_14", "P0_08", "P0_07", "P0_06"]
+col_pins = ["P1_15", "P1_13", "P1_11", "P0_10", "P0_09"]
+row_pins = ["P1_06", "P1_02", "P0_29", "P0_31"]
 # col2row = true
 
 [[split.peripheral]]
