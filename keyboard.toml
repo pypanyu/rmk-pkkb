@@ -7,20 +7,6 @@ product_id = 0x4643
 manufacturer = "rmk"
 chip = "rp2040"
 
-# 分体开关开启
-split = true
-
-# ====================== 分体通信 PIO UART (CTOC) ======================
-[split.uart]
-baudrate = 115200
-# 主机(左半) TX/RX
-central_tx = "GPIO1"
-central_rx = "GPIO2"
-# 从机(右半) TX/RX 与主机交叉
-peripheral_tx = "GPIO2"
-peripheral_rx = "GPIO1"
-
-
 [layout]
 rows = 4
 cols = 10
@@ -84,6 +70,11 @@ keymap = [
     ]
 ]
 
+[storage]
+
+[split]
+connection = "serial"
+
 [rmk]
 # Maximum number of combos keyboard can store
 combo_max_num = 25
@@ -91,14 +82,6 @@ combo_max_num = 25
 combo_max_length = 4
 # Default debounce time in milliseconds  
 debounce_time = 5
-
-[host]
-# Enable or disable Vial support (default: true)
-vial_enabled = true
-
-# Unlock keys for Vial security (optional)
-# Keys must be pressed simultaneously to unlock Vial configuration
-unlock_keys = [[0, 0], [0, 1]]  # Keys at (row=0,col=0) and (row=0,col=1)
 
 
 # ====================== 主机（左半 17键）矩阵 ======================
