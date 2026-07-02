@@ -102,9 +102,7 @@ unlock_keys = [[0, 0], [0, 1]]  # Keys at (row=0,col=0) and (row=0,col=1)
 
 
 # ====================== 主机（左半 17键）矩阵 ======================
-[
-split.central.matrix
-]
+[split.central.matrix]
 row2col = true # 行输入、列输出（你的原理图二极管接ROW-GND）
 # 行输入引脚（单一行，上拉输入，对应你原图input-gpios全部17个）
 row_pins = [
@@ -121,9 +119,7 @@ matrix_map = [
 ]
 
 # ====================== 从机（右半 17键）矩阵 ======================
-[
-split.peripheral.matrix
-]
+[split.peripheral.matrix]
 row2col = true
 # 和左半完全相同引脚排布（PCB完全一致）
 row_pins = [
