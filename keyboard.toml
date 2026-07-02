@@ -1,11 +1,11 @@
  #Documentation: https://rmk.rs/docs/configuration.html
 [keyboard]
-name = "pkkblab"
-product_name = "pkkblab"
+name = "Orbit34"
+product_name = "Orbit34"
 vendor_id = 0x4c4b
 product_id = 0x4643
 manufacturer = "rmk"
-chip = "nrf52840"
+chip = "rp2040"
 
 [layout]
 rows = 4
