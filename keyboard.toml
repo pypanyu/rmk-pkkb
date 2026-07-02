@@ -7,6 +7,22 @@ product_id = 0x4643
 manufacturer = "rmk"
 chip = "rp2040"
 
+# 分体开关开启
+split = true
+
+# ====================== 分体通信 PIO UART (CTOC) ======================
+[
+split.uart
+]
+baudrate = 115200
+# 主机(左半) TX/RX
+central_tx = "GPIO1"
+central_rx = "GPIO2"
+# 从机(右半) TX/RX 与主机交叉
+peripheral_tx = "GPIO2"
+peripheral_rx = "GPIO1"
+
+
 [layout]
 rows = 4
 cols = 10
@@ -16,8 +32,8 @@ keymap = [
     [
         ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
         ["A", "S", "D", "F", "G", "H", "J", "K", "L", "Enter"],
-        ["Z", "X", "C", "V", "B", "N", "M", "E", "R", "T"],
-        ["LCtrl", "1", "LAlt", "LShift", "Space", "LT(2, Space)", "RAlt", "E", "R", "T"]
+        ["Z", "X", "C", "V", "B", "N", "M", "Comma", "Dot", "Delete"],
+        ["_", "_", "_", "LShift", "Space", "LT(2, Space)", "RAlt", "_", "_", "_",]
     ],
     # Layer 1 (Left half only)
     [
@@ -86,33 +102,41 @@ vial_enabled = true
 # Keys must be pressed simultaneously to unlock Vial configuration
 unlock_keys = [[0, 0], [0, 1]]  # Keys at (row=0,col=0) and (row=0,col=1)
 
-[ble]
-enabled = true
-battery_adc_pin = "vddh"
 
-[split]
-connection = "ble"
+# ====================== 主机（左半 17键）矩阵 ======================
+[
+split.central.matrix
+]
+row2col = true # 行输入、列输出（你的原理图二极管接ROW-GND）
+# 行输入引脚（单一行，上拉输入，对应你原图input-gpios全部17个）
+row_pins = [
+    "GPIO2", "GPIO3", "GPIO16", "GPIO13", "GPIO12",
+    "GPIO1", "GPIO4", "GPIO15", "GPIO11", "GPIO9",
+    "GPIO0", "GPIO5", "GPIO14", "GPIO10", "GPIO6",
+    "GPIO7", "GPIO8"
+]
+# 列输出仅1根（单行长矩阵，所有开关共用1列）
+col_pins = ["GPIO0"]
+# 左半按键布局 1行17列
+matrix_map = [
+    [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
+]
 
-[split.central]
-rows = 4
-cols = 5
-row_offset = 0
-col_offset = 0
-ble_addr = [0x18, 0xe2, 0x21, 0x80, 0xc0, 0xc7]
-[split.central.matrix]
-matrix_type = "normal"
-col_pins = ["P1_15", "P1_13", "P1_11", "P0_10", "P0_09"]
-row_pins = ["P1_06", "P0_02", "P0_29", "P0_31"]
-# col2row = true
+# ====================== 从机（右半 17键）矩阵 ======================
+[
+split.peripheral.matrix
+]
+row2col = true
+# 和左半完全相同引脚排布（PCB完全一致）
+row_pins = [
+    "GPIO2", "GPIO3", "GPIO16", "GPIO13", "GPIO12",
+    "GPIO1", "GPIO4", "GPIO15", "GPIO11", "GPIO9",
+    "GPIO0", "GPIO5", "GPIO14", "GPIO10", "GPIO6",
+    "GPIO7", "GPIO8"
+]
+col_pins = ["GPIO0"]
+# 右半按键映射，接在主机键位之后
+matrix_map = [
+    [17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33]
+]
 
-[[split.peripheral]]
-rows = 4
-cols = 5
-row_offset = 0
-col_offset = 5
-ble_addr = [0x7e, 0xfe, 0x73, 0x9e, 0x66, 0xe3]
-[split.peripheral.matrix]
-matrix_type = "normal"
-col_pins = ["P1_15", "P1_13", "P1_11", "P0_10", "P0_09"]
-row_pins = ["P1_06", "P0_02", "P0_29", "P0_31"]
-# col2row = true
