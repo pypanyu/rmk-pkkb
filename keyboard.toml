@@ -17,7 +17,7 @@ keymap = [
         ["Esc","Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "Backspace"],
         ["Tab","A", "S", "D", "F", "G", "H", "J", "K", "L", "Semicolon", "Enter"],
         ["LShift","Z", "X", "C", "V", "B", "N", "M", "Comma", "Dot", "Up", "Delete"],
-        ["LCtrl", "LGui", "LAlt", "Space","LT(2, Space)", "Left", "Down", "Right"， "_", "_", "_", "_"]
+        ["LCtrl", "LGui", "LAlt", "Space","LT(2, Space)", "Left", "Down", "Right", "_", "_", "_", "_"]
     ],
     # Layer 1 (Left half only)
     [
