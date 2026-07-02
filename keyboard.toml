@@ -11,9 +11,7 @@ chip = "rp2040"
 split = true
 
 # ====================== 分体通信 PIO UART (CTOC) ======================
-[
-split.uart
-]
+[split.uart]
 baudrate = 115200
 # 主机(左半) TX/RX
 central_tx = "GPIO1"
