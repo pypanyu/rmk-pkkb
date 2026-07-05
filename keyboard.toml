@@ -7,110 +7,55 @@ product_id = 0x4643
 manufacturer = "rmk"
 chip = "rp2040"
 
-[layout]
-rows = 4
-cols = 10
-layers = 8
-keymap = [
-    # Layer 0
-    [
-        ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
-        ["A", "S", "D", "F", "G", "H", "J", "K", "L", "Enter"],
-        ["Z", "X", "C", "V", "B", "N", "M", "Comma", "Dot", "Delete"],
-        ["_", "_", "_", "LShift", "Space", "LT(2, Space)", "RAlt", "_", "_", "_",]
-    ],
-    # Layer 1 (Left half only)
-    [
-        ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
-    ],
-    # Layer 2
-    [
-        ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
-    ],
-    # Layer 3
-    [
-        ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
-    ],
-    # Layer 4 (empty/transparent)
-    [
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
-    ],
-    # Layer 5
-    [
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
-    ],
-    # Layer 6
-    [
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
-    ],
-    # Layer 7
-    [
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
-    ]
-]
-
-[storage]
+[keyboard]
+name = "RMK Split GPIO Keyboard"
+product_name = "RMK Split GPIO Keyboard"
+vendor_id = 0x4c4b
+product_id = 0x4643
+manufacturer = "haobo"
+chip = "rp2040"
 
 [split]
 connection = "serial"
 
-[rmk]
-# Maximum number of combos keyboard can store
-combo_max_num = 25
-# Maximum number of keys pressed simultaneously in a combo
-combo_max_length = 4
-# Default debounce time in milliseconds  
-debounce_time = 5
-
-
-# ====================== 主机（左半 17键）矩阵 ======================
+# =====================================================
+# CENTRAL (LEFT HALF)
+# =====================================================
 [split.central]
-rows = 17
-cols = 1
-row_offset = 0
-col_offset = 0
+
 serial = [
-    { instance = "UART0", tx_pin = "GP10", rx_pin = "GP0" },
+  { instance = "UART0", tx_pin = "GP0", rx_pin = "GP1" },
 ]
-[split.central.matrix]
-matrix_type = "normal"
-# RMK uses col2row as the default matrix diode direction, if you want to use a row2col matrix, add `row2col = true`
-row2col = true
-row_pins = ["GPIO2", "GPIO3", "GPIO16", "GPIO13", "GPIO12","GPIO1", "GPIO4", "GPIO15", "GPIO11", "GPIO9", "GPIO0", "GPIO5", "GPIO14", "GPIO10", "GPIO6", "GPIO7", "GPIO8"]
-col_pins = ["GPIO0"]
-# Hold the key at (row=0,col=0) during boot to drop into the RP2040 bootloader.
-bootmagic = [0, 0]
 
+# GPIO direct keys (no matrix)
+keys = [
+  "D3",   # SW11 (DATA / key)
+  "D0",   # SW1
+  "D4",   # SW2
+  "D1",   # SW6
+  "C6",   # SW7
+  "D7",   # SW12
+  "E6",   # SW15
+  "B4",   # SW16
+  "B5",   # SW17
+]
+
+# =====================================================
+# PERIPHERAL (RIGHT HALF)
+# =====================================================
 [[split.peripheral]]
-[split.central]
-rows = 17
-cols = 1
-row_offset = 0
-col_offset = 0
-serial = [{ instance = "UART0", tx_pin = "GP10", rx_pin = "GP0" }]
-[split.peripheral.matrix]
-matrix_type = "normal"
-row_pins = ["GPIO2", "GPIO3", "GPIO16", "GPIO13", "GPIO12","GPIO1", "GPIO4", "GPIO15", "GPIO11", "GPIO9", "GPIO0", "GPIO5", "GPIO14", "GPIO10", "GPIO6", "GPIO7", "GPIO8"]
-col_pins = ["GPIO0"]
-bootmagic = [0, 0]
+
+serial = [
+  { instance = "UART0", tx_pin = "GP1", rx_pin = "GP0" },
+]
+
+keys = [
+  "F4",   # SW3
+  "F6",   # SW8
+  "F6",   # SW13 ⚠ 保留同脚，但已标记为共享（需硬件确认）
+  "F7",   # SW4
+  "B3",   # SW9
+  "B1",   # SW14
+  "B2",   # SW5
+  "B6",   # SW10
+]
