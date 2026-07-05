@@ -85,35 +85,32 @@ debounce_time = 5
 
 
 # ====================== 主机（左半 17键）矩阵 ======================
+[split.central]
+rows = 17
+cols = 1
+row_offset = 0
+col_offset = 0
+serial = [
+    { instance = "UART0", tx_pin = "GP10", rx_pin = "GP0" },
+]
 [split.central.matrix]
-row2col = true # 行输入、列输出（你的原理图二极管接ROW-GND）
-# 行输入引脚（单一行，上拉输入，对应你原图input-gpios全部17个）
-row_pins = [
-    "GPIO2", "GPIO3", "GPIO16", "GPIO13", "GPIO12",
-    "GPIO1", "GPIO4", "GPIO15", "GPIO11", "GPIO9",
-    "GPIO0", "GPIO5", "GPIO14", "GPIO10", "GPIO6",
-    "GPIO7", "GPIO8"
-]
-# 列输出仅1根（单行长矩阵，所有开关共用1列）
-col_pins = ["GPIO0"]
-# 左半按键布局 1行17列
-matrix_map = [
-    [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
-]
-
-# ====================== 从机（右半 17键）矩阵 ======================
-[split.peripheral.matrix]
+matrix_type = "normal"
+# RMK uses col2row as the default matrix diode direction, if you want to use a row2col matrix, add `row2col = true`
 row2col = true
-# 和左半完全相同引脚排布（PCB完全一致）
-row_pins = [
-    "GPIO2", "GPIO3", "GPIO16", "GPIO13", "GPIO12",
-    "GPIO1", "GPIO4", "GPIO15", "GPIO11", "GPIO9",
-    "GPIO0", "GPIO5", "GPIO14", "GPIO10", "GPIO6",
-    "GPIO7", "GPIO8"
-]
+row_pins = ["GPIO2", "GPIO3", "GPIO16", "GPIO13", "GPIO12","GPIO1", "GPIO4", "GPIO15", "GPIO11", "GPIO9", "GPIO0", "GPIO5", "GPIO14", "GPIO10", "GPIO6", "GPIO7", "GPIO8"]
 col_pins = ["GPIO0"]
-# 右半按键映射，接在主机键位之后
-matrix_map = [
-    [17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33]
-]
+# Hold the key at (row=0,col=0) during boot to drop into the RP2040 bootloader.
+bootmagic = [0, 0]
 
+[[split.peripheral]]
+[split.central]
+rows = 17
+cols = 1
+row_offset = 0
+col_offset = 0
+serial = [{ instance = "UART0", tx_pin = "GP10", rx_pin = "GP0" }]
+[split.peripheral.matrix]
+matrix_type = "normal"
+row_pins = ["GPIO2", "GPIO3", "GPIO16", "GPIO13", "GPIO12","GPIO1", "GPIO4", "GPIO15", "GPIO11", "GPIO9", "GPIO0", "GPIO5", "GPIO14", "GPIO10", "GPIO6", "GPIO7", "GPIO8"]
+col_pins = ["GPIO0"]
+bootmagic = [0, 0]
