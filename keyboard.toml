@@ -79,19 +79,6 @@ combo_max_length = 4
 debounce_time = 5
 
 
-[behavior.morse] # 摩斯码，通过短按/长按的排列组合，实现不同按键的输出
-# default profile for morse, tap dance and tap-hold keys:全局配置
-enable_flow_tap = true
-prior_idle_time = "120ms"
-hold_on_other_press = true
-unilateral_false = false
-hold_timeout = "250ms"
-gap_timeout = "250ms"
-
-morse_max_num = 32        # 全局最多支持 16 组独立 TapDance/Morse 按键（按需修改，上限256）
-max_patterns_per_key = 10 # 单个 TapDance 按键支持最多 10 连击阶数（单击/双击/三击…）
-
-
 [host]
 # Unlock combination: simultaneous press of specified keys
 # Format: [[row, col], [row, col], ...]
