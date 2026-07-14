@@ -73,11 +73,174 @@ keymap = [
 [rmk]
 # Maximum number of combos keyboard can store
 combo_max_num = 25
+# Maximum number of tap dances keyboard can store
+tap_dance_max_num = 32
 # Maximum number of keys pressed simultaneously in a combo
 combo_max_length = 4
 # Default debounce time in milliseconds  
 debounce_time = 5
 
+[tap_dance]
+
+[[tap_dance.entry]]
+id = 0
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 1
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 2
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 3
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 4
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 5
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 6
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 7
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 8
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 9
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 10
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 11
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 12
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 13
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 14
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 15
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 16
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 17
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 18
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 19
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 20
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 21
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 22
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 23
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 24
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 25
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 26
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 27
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 28
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 29
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 30
+tap = "KC_NO"
+hold = "KC_NO"
+
+[[tap_dance.entry]]
+id = 31
+tap = "KC_NO"
+hold = "KC_NO"
 
 [host]
 # Unlock combination: simultaneous press of specified keys
