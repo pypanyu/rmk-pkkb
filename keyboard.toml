@@ -77,6 +77,10 @@ combo_max_num = 25
 combo_max_length = 4
 # Default debounce time in milliseconds  
 debounce_time = 5
+morse_max_num = 32
+# Maximum number of patterns a morse key can handle (default: 8, min: 4, max 65536)
+max_patterns_per_key = 4
+# Macro space size in bytes for storing sequences. The maximum number of Macros depends on the size of each sequence: All sequences combined need to fit into macro_space_size, the number of macro sequences doesn't matter.
 
 [host]
 # Enable or disable Vial support (default: true)
@@ -100,6 +104,7 @@ row_offset = 0
 col_offset = 0
 ble_addr = [0x18, 0xe2, 0x21, 0x80, 0xc0, 0xc7]
 [split.central.matrix]
+bootmagic = [0, 0]
 matrix_type = "normal"
 col_pins = ["P1_15", "P1_13", "P1_11", "P0_10", "P0_09"]
 row_pins = ["P1_06", "P0_02", "P0_29", "P0_31"]
@@ -112,6 +117,7 @@ row_offset = 0
 col_offset = 5
 ble_addr = [0x7e, 0xfe, 0x73, 0x9e, 0x66, 0xe3]
 [split.peripheral.matrix]
+bootmagic = [0, 0]
 matrix_type = "normal"
 col_pins = ["P1_15", "P1_13", "P1_11", "P0_10", "P0_09"]
 row_pins = ["P1_06", "P0_02", "P0_29", "P0_31"]
