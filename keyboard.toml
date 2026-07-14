@@ -4,14 +4,14 @@ product_name = "haori36rmk"
 vendor_id = 0x4c4b
 product_id = 0x4643
 manufacturer = "pkk"
-chip = "rp2040-zero"
+chip = "rp2040"
 
 [matrix]
 # Row and col pins are mandatory
 row_pins = ["GP12", "GP13", "GP14", "GP15"]
 col_pins = ["GP2", "GP3", "GP4", "GP5", "GP6", "GP7", "GP8", "GP9", "GP10", "GP11"]
 # RMK uses col2row as the default matrix diode direction, if you want to use a row2col matrix, add `row2col = true`
-# row2col = true
+col2row = true
 
 [layout]
 rows = 4
