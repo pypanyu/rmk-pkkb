@@ -77,6 +77,10 @@ combo_max_num = 25
 combo_max_length = 4
 # Default debounce time in milliseconds  
 debounce_time = 5
+morse_max_num = 32
+# Maximum number of patterns a morse key can handle (default: 8, min: 4, max 65536)
+max_patterns_per_key = 4
+# Macro space size in bytes for storing sequences. The maximum number of Macros depends on the size of each sequence: All sequences combined need to fit into macro_space_size, the number of macro sequences doesn't matter.
 
 [tap_dance]
 
