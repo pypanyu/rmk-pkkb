@@ -1,23 +1,29 @@
- #Documentation: https://rmk.rs/docs/configuration.html
 [keyboard]
-name = "Toykit"
-product_name = "Toykit"
+name = "haori36rmk"
+product_name = "haori36rmk"
 vendor_id = 0x4c4b
 product_id = 0x4643
-manufacturer = "rmk"
-chip = "nrf52840"
+manufacturer = "pkk"
+chip = "rp2040"
+
+[matrix]
+# Row and col pins are mandatory
+row_pins = ["PIN_6", "PIN_7", "PIN_8", "PIN_9"]
+col_pins = ["PIN_19", "PIN_20", "PIN_21"]
+# RMK uses col2row as the default matrix diode direction, if you want to use a row2col matrix, add `row2col = true`
+# row2col = true
 
 [layout]
 rows = 4
 cols = 10
 layers = 8
 keymap = [
-    # Layer 0
+     # Layer 0
     [
         ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
         ["A", "S", "D", "F", "G", "H", "J", "K", "L", "Enter"],
         ["Z", "X", "C", "V", "B", "N", "M", "Comma", "Dot", "Delete"],
-        ["LCtrl", "LGui", "LAlt", "LShift", "Space", "LT(2, Space)", "RAlt", "Left", "Down", "Right" ]
+        ["_", "_", "LAlt", "LShift", "Space", "LT(2, Space)", "RAlt", "Left", "_", "_",]
     ],
     # Layer 1 (Left half only)
     [
@@ -77,6 +83,8 @@ combo_max_num = 25
 combo_max_length = 4
 # Default debounce time in milliseconds  
 debounce_time = 5
+morse_max_num = 32
+max_patterns_per_key = 8
 
 [host]
 # Enable or disable Vial support (default: true)
@@ -86,33 +94,6 @@ vial_enabled = true
 # Keys must be pressed simultaneously to unlock Vial configuration
 unlock_keys = [[0, 0], [0, 1]]  # Keys at (row=0,col=0) and (row=0,col=1)
 
-[ble]
-enabled = true
-battery_adc_pin = "vddh"
-
-[split]
-connection = "ble"
-
-[split.central]
-rows = 4
-cols = 5
-row_offset = 0
-col_offset = 0
-ble_addr = [0x18, 0xe2, 0x21, 0x80, 0xc0, 0xc7]
-[split.central.matrix]
-matrix_type = "normal"
-col_pins = ["P1_15", "P1_13", "P1_11", "P0_10", "P0_09"]
-row_pins = ["P1_06", "P0_02", "P0_29", "P0_31"]
-# col2row = true
-
-[[split.peripheral]]
-rows = 4
-cols = 5
-row_offset = 0
-col_offset = 5
-ble_addr = [0x7e, 0xfe, 0x73, 0x9e, 0x66, 0xe3]
-[split.peripheral.matrix]
-matrix_type = "normal"
-col_pins = ["P1_15", "P1_13", "P1_11", "P0_10", "P0_09"]
-row_pins = ["P1_06", "P0_02", "P0_29", "P0_31"]
-# col2row = true
+[storage]
+# Storage feature is enabled by default
+# enabled = false
