@@ -4,7 +4,7 @@ product_name = "haori36rmk"
 vendor_id = 0x4c4b
 product_id = 0x4643
 manufacturer = "pkk"
-chip = "rp2040"
+chip = "rp2040 zero"
 
 [matrix]
 # Row and col pins are mandatory
