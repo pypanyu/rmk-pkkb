@@ -87,21 +87,7 @@ hold_on_other_press = true
 unilateral_false = false
 hold_timeout = "250ms"
 gap_timeout = "250ms"
-patterns = [
-    [
-"KC_A"
-],       # 单击
-    [
-"KC_B"
-],       # 双击
-    [
-"KC_C"
-],       # 三击
-    [
-"KC_D"
-],       # 四击
-    # ... 按 morse_max_num 数量继续添加
-]
+
 morse_max_num = 32        # 全局最多支持 16 组独立 TapDance/Morse 按键（按需修改，上限256）
 max_patterns_per_key = 10 # 单个 TapDance 按键支持最多 10 连击阶数（单击/双击/三击…）
 
