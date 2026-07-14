@@ -73,8 +73,6 @@ keymap = [
 [rmk]
 # Maximum number of combos keyboard can store
 combo_max_num = 25
-# Maximum number of tap dances keyboard can store
-tap_dance_max_num = 32
 # Maximum number of keys pressed simultaneously in a combo
 combo_max_length = 4
 # Default debounce time in milliseconds  
