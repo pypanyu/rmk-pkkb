@@ -7,55 +7,57 @@ product_id = 0x4643
 manufacturer = "rmk"
 chip = "rp2040"
 
-[keyboard]
-name = "RMK Split GPIO Keyboard"
-product_name = "RMK Split GPIO Keyboard"
-vendor_id = 0x4c4b
-product_id = 0x4643
-manufacturer = "haobo"
-chip = "rp2040"
-
 [split]
 connection = "serial"
 
-# =====================================================
-# CENTRAL (LEFT HALF)
-# =====================================================
 [split.central]
-
+rows = 4
+cols = 5
+row_offset = 0
+col_offset = 0
 serial = [
-  { instance = "UART0", tx_pin = "GP0", rx_pin = "GP1" },
+    { instance = "PIO0", tx_pin = "PIN_0", rx_pin = "PIN_0" },
+    { instance = "PIO1", tx_pin = "PIN_4", rx_pin = "PIN_5" },
 ]
-
-# GPIO direct keys (no matrix)
-keys = [
-  "D3",   # SW11 (DATA / key)
-  "D0",   # SW1
-  "D4",   # SW2
-  "D1",   # SW6
-  "C6",   # SW7
-  "D7",   # SW12
-  "E6",   # SW15
-  "B4",   # SW16
-  "B5",   # SW17
+[split.central.matrix]
+matrix_type = "direct_pin"
+direct_pin_low_active = true
+direct_pins = [
+    ["PIN_0", "PIN_1", "PIN_2"],
+    ["PIN_3", "PIN_4", "PIN_5"],
+    ["PIN_6", "_", "_"],
+    ["PIN_9", "PIN_10", "_"],
 ]
+bootmagic = [0, 0]
 
-# =====================================================
-# PERIPHERAL (RIGHT HALF)
-# =====================================================
 [[split.peripheral]]
+rows = 2
+cols = 1
+row_offset = 2
+col_offset = 2
+serial = [{ instance = "PIO0", tx_pin = "PIN_0", rx_pin = "PIN_0" }]
+[split.peripheral.matrix]
+matrix_type = "normal"
+row_pins = ["PIN_9", "PIN_11"]
+col_pins = ["PIN_10"]
+bootmagic = [0, 0]
 
-serial = [
-  { instance = "UART0", tx_pin = "GP1", rx_pin = "GP0" },
+[layout]
+rows = 4
+cols = 5
+layers = 8
+keymap = [
+    [
+        ["A", "B", "C"],
+        ["Kc1", "Kc2", "Kc3"],
+        ["LCtrl", "_", "_"],
+        ["OSL(1)", "LT(2, Kc9)", "_"]
+    ],
+    [
+        ["_", "TT(1)", "TG(2)"],
+        ["_", "_", "_"],
+        ["_", "_", "_"],
+        ["_", "_", "_"]
+    ],
 ]
 
-keys = [
-  "F4",   # SW3
-  "F6",   # SW8
-  "F6",   # SW13 ⚠ 保留同脚，但已标记为共享（需硬件确认）
-  "F7",   # SW4
-  "B3",   # SW9
-  "B1",   # SW14
-  "B2",   # SW5
-  "B6",   # SW10
-]
