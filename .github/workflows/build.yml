@@ -14,13 +14,31 @@ jobs:
       - name: Checkout firmware repository
         uses: actions/checkout@v4
         with:
-          path: projects/repo
+          path: projects/repo/rp2040_split
 
       - name: Checkout RMK dependency
         uses: actions/checkout@v4
         with:
           repository: rmk-rs/rmk
-          path: projects/rmk
+          path: rmk
+
+      - name: Debug workspace layout
+        run: |
+          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
+          pwd
+          echo "Root contents:"
+          ls -la
+          echo "projects/repo/rp2040_split contents:"
+          ls -la "$GITHUB_WORKSPACE/projects/repo/rp2040_split" || true
+          echo "rmk contents:"
+          ls -la "$GITHUB_WORKSPACE/rmk" || true
+          echo "Cargo.toml preview:"
+          if [ -f "$GITHUB_WORKSPACE/projects/repo/rp2040_split/Cargo.toml" ]; then
+            sed -n '1,20p' "$GITHUB_WORKSPACE/projects/repo/rp2040_split/Cargo.toml"
+          else
+            echo 'Cargo.toml missing in expected path'
+            exit 1
+          fi
 
       - name: Cache cargo registry and git index
         uses: actions/cache@v4
@@ -44,28 +62,34 @@ jobs:
           cargo install --locked cargo-binutils flip-link cargo-hex-to-uf2
 
       - name: Build central firmware
-        working-directory: projects/repo/rp2040_split
-        run: cargo build --release --bin central --target thumbv6m-none-eabi
+        run: |
+          cd "$GITHUB_WORKSPACE/projects/repo/rp2040_split"
+          cargo build --release --bin central --target thumbv6m-none-eabi
 
       - name: Build peripheral firmware
-        working-directory: projects/repo/rp2040_split
-        run: cargo build --release --bin peripheral --target thumbv6m-none-eabi
+        run: |
+          cd "$GITHUB_WORKSPACE/projects/repo/rp2040_split"
+          cargo build --release --bin peripheral --target thumbv6m-none-eabi
 
       - name: Create central HEX
-        working-directory: projects/repo/rp2040_split
-        run: cargo objcopy --release --bin central -- --output-target ihex rmk-central.hex
+        run: |
+          cd "$GITHUB_WORKSPACE/projects/repo/rp2040_split"
+          cargo objcopy --release --bin central -- --output-target ihex rmk-central.hex
 
       - name: Create peripheral HEX
-        working-directory: projects/repo/rp2040_split
-        run: cargo objcopy --release --bin peripheral -- --output-target ihex rmk-peripheral.hex
+        run: |
+          cd "$GITHUB_WORKSPACE/projects/repo/rp2040_split"
+          cargo objcopy --release --bin peripheral -- --output-target ihex rmk-peripheral.hex
 
       - name: Create central UF2
-        working-directory: projects/repo/rp2040_split
-        run: cargo hex-to-uf2 --input-path rmk-central.hex --output-path rmk-central.uf2 --family rp2040
+        run: |
+          cd "$GITHUB_WORKSPACE/projects/repo/rp2040_split"
+          cargo hex-to-uf2 --input-path rmk-central.hex --output-path rmk-central.uf2 --family rp2040
 
       - name: Create peripheral UF2
-        working-directory: projects/repo/rp2040_split
-        run: cargo hex-to-uf2 --input-path rmk-peripheral.hex --output-path rmk-peripheral.uf2 --family rp2040
+        run: |
+          cd "$GITHUB_WORKSPACE/projects/repo/rp2040_split"
+          cargo hex-to-uf2 --input-path rmk-peripheral.hex --output-path rmk-peripheral.uf2 --family rp2040
 
       - name: Upload firmware artifacts
         uses: actions/upload-artifact@v4
