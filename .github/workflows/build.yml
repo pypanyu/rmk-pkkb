@@ -11,24 +11,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install system dependencies
+        run: sudo apt update && sudo apt install -y libudev-dev
+
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: thumbv6m-none-eabi
 
-      - name: Install elf2uf2
+      - name: Install elf2uf2-rs
         run: cargo install elf2uf2-rs
 
-      - name: Build & Generate UF2
-        run: cargo build --release --features=rp2040
-      
-      - name: Output UF2
+      - name: Build firmware
+        run: cargo build --release
+
+      - name: Generate UF2
         run: elf2uf2-rs target/release/*.elf firmware.uf2
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: firmware
+          name: RP2040-Firmware
           path: |
             firmware.uf2
             target/release/*.bin
