@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: rmk-rs/rmk
-          path: rmk
+          path: projects/rmk
 
       - name: Cache cargo registry and git index
         uses: actions/cache@v4
