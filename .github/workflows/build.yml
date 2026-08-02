@@ -1,102 +1,13 @@
-name: Build RMK RP2040 Split Firmware
-
+name: Build RMK firmware
 on:
+  workflow_dispatch:
   push:
-    branches: [main, master]
-  pull_request:
-    branches: [main, master]
+    paths:
+      - "**"
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout firmware repository
-        uses: actions/checkout@v4
-        with:
-          path: projects/repo/rp2040_split
-
-      - name: Checkout RMK dependency
-        uses: actions/checkout@v4
-        with:
-          repository: rmk-rs/rmk
-          path: rmk
-
-      - name: Debug workspace layout
-        run: |
-          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
-          pwd
-          echo "Root contents:"
-          ls -la
-          echo "projects/repo/rp2040_split contents:"
-          ls -la "$GITHUB_WORKSPACE/projects/repo/rp2040_split" || true
-          echo "rmk contents:"
-          ls -la "$GITHUB_WORKSPACE/rmk" || true
-          echo "Cargo.toml preview:"
-          if [ -f "$GITHUB_WORKSPACE/projects/repo/rp2040_split/Cargo.toml" ]; then
-            sed -n '1,20p' "$GITHUB_WORKSPACE/projects/repo/rp2040_split/Cargo.toml"
-          else
-            echo 'Cargo.toml missing in expected path'
-            exit 1
-          fi
-
-      - name: Cache cargo registry and git index
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-          key: ${{ runner.os }}-cargo-${{ hashFiles('projects/repo/rp2040_split/Cargo.toml', 'projects/repo/rp2040_split/Cargo.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-
-
-      - name: Install Rust toolchain and target
-        run: |
-          rustup toolchain install stable
-          rustup default stable
-          rustup component add llvm-tools-preview
-          rustup target add thumbv6m-none-eabi
-
-      - name: Install build helpers
-        run: |
-          cargo install --locked cargo-binutils flip-link cargo-hex-to-uf2
-
-      - name: Build central firmware
-        run: |
-          cd "$GITHUB_WORKSPACE/projects/repo/rp2040_split"
-          cargo build --release --bin central --target thumbv6m-none-eabi
-
-      - name: Build peripheral firmware
-        run: |
-          cd "$GITHUB_WORKSPACE/projects/repo/rp2040_split"
-          cargo build --release --bin peripheral --target thumbv6m-none-eabi
-
-      - name: Create central HEX
-        run: |
-          cd "$GITHUB_WORKSPACE/projects/repo/rp2040_split"
-          cargo objcopy --release --bin central -- --output-target ihex rmk-central.hex
-
-      - name: Create peripheral HEX
-        run: |
-          cd "$GITHUB_WORKSPACE/projects/repo/rp2040_split"
-          cargo objcopy --release --bin peripheral -- --output-target ihex rmk-peripheral.hex
-
-      - name: Create central UF2
-        run: |
-          cd "$GITHUB_WORKSPACE/projects/repo/rp2040_split"
-          cargo hex-to-uf2 --input-path rmk-central.hex --output-path rmk-central.uf2 --family rp2040
-
-      - name: Create peripheral UF2
-        run: |
-          cd "$GITHUB_WORKSPACE/projects/repo/rp2040_split"
-          cargo hex-to-uf2 --input-path rmk-peripheral.hex --output-path rmk-peripheral.uf2 --family rp2040
-
-      - name: Upload firmware artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: rmk-firmware
-          path: |
-            projects/repo/rp2040_split/rmk-central.hex
-            projects/repo/rp2040_split/rmk-peripheral.hex
-            projects/repo/rp2040_split/rmk-central.uf2
-            projects/repo/rp2040_split/rmk-peripheral.uf2
+    uses: rmk-rs/rmk/.github/workflows/user_build.yml@main
+    with:
+      keyboard_toml_path: "keyboard.toml"
+      vial_json_path: "vial.json"
