@@ -20,7 +20,7 @@ map = """
 [keymap]
 layers = 8
 
-[[keymap.layer0]]
+[[keymap.layer]]
 keys = """
 Q       W        E        R         T         Y         U          I           O           P
 A       S        D        F         G         H         J          K           L         Enter
@@ -28,7 +28,7 @@ Z       X        C        V         B         N         M        Comma        Do
 _     LCtrl    LAlt    LShift     MO(1)     MO(2)     Space    Backspace    Delete         _ 
 """
 
-[[keymap.layer1]]
+[[keymap.layer]]
 keys = """
 _    _     _    _    _     _    _     _    _    _    
 _    _     _    _    _     _    _     _    _    _ 
@@ -36,7 +36,7 @@ _    _     _    _    _     _    _     _    _    _
 _    _     _    _    _     _    _     _    _    _ 
 """
 
-[[keymap.layer2]]
+[[keymap.layer]]
 keys = """
 _    _     _    _    _     _    _     _    _    _    
 _    _     _    _    _     _    _     _    _    _ 
@@ -44,7 +44,7 @@ _    _     _    _    _     _    _     _    _    _
 _    _     _    _    _     _    _     _    _    _ 
 """
 
-[[keymap.layer3]]
+[[keymap.layer]]
 keys = """
 _    _     _    _    _     _    _     _    _    _    
 _    _     _    _    _     _    _     _    _    _ 
@@ -52,7 +52,7 @@ _    _     _    _    _     _    _     _    _    _
 _    _     _    _    _     _    _     _    _    _ 
 """
 
-[[keymap.layer4]]
+[[keymap.layer]]
 keys = """
 _    _     _    _    _     _    _     _    _    _    
 _    _     _    _    _     _    _     _    _    _ 
@@ -60,7 +60,7 @@ _    _     _    _    _     _    _     _    _    _
 _    _     _    _    _     _    _     _    _    _ 
 """
 
-[[keymap.layer5]]
+[[keymap.layer]]
 keys = """
 _    _     _    _    _     _    _     _    _    _    
 _    _     _    _    _     _    _     _    _    _ 
@@ -68,7 +68,7 @@ _    _     _    _    _     _    _     _    _    _
 _    _     _    _    _     _    _     _    _    _ 
 """
 
-[[keymap.layer6]]
+[[keymap.layer]]
 keys = """
 _    _     _    _    _     _    _     _    _    _    
 _    _     _    _    _     _    _     _    _    _ 
@@ -76,7 +76,7 @@ _    _     _    _    _     _    _     _    _    _
 _    _     _    _    _     _    _     _    _    _ 
 """
 
-[[keymap.layer7]]
+[[keymap.layer]]
 keys = """
 _    _     _    _    _     _    _     _    _    _    
 _    _     _    _    _     _    _     _    _    _ 
