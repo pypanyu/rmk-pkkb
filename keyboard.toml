@@ -1,7 +1,7 @@
  #Documentation: https://rmk.rs/docs/configuration.html
 [keyboard]
-name = "Toykit"
-product_name = "Toykit"
+name = "velvet"
+product_name = "velvet"
 vendor_id = 0x4c4b
 product_id = 0x4643
 manufacturer = "rmk"
@@ -17,7 +17,7 @@ keymap = [
         ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
         ["A", "S", "D", "F", "G", "H", "J", "K", "L", "Enter"],
         ["Z", "X", "C", "V", "B", "N", "M", "Comma", "Dot", "Delete"],
-        ["LCtrl", "LGui", "LAlt", "LShift", "Space", "LT(2, Space)", "RAlt", "Left", "Down", "Right" ]
+        ["_", "LCtrl", "LAlt", "LShift", "Space", "LT(2, Space)", "RAlt", "Left", "Down", "_"]
     ],
     # Layer 1 (Left half only)
     [
