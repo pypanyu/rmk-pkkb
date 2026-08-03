@@ -18,6 +18,7 @@ map = """
 """
 
 [keymap]
+layers = 8
 
 [[keymap.layer]]
 keys = """
@@ -29,7 +30,7 @@ _     LCtrl    LAlt    LShift     MO(1)     MO(2)     Space    Backspace    Dele
 
 [[keymap.layer]]
 keys = """
-Num1 Num2 Num3 Num4 Num5 Num6 Num7 Num8 Num9 Num0 
+Q       W        E        R         T         Y         U          I           O           P
 _        _       _       _       _       _       _       _       _       _ 
 _        _       _       _       _       _       _       _       _       _ 
 _        _       _       _       _       _       _       _       _       _ 
