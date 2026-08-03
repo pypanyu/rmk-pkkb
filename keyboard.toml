@@ -1,7 +1,7 @@
 [keyboard]
 # Replace with your keyboard identity.
-name = "velvet1"
-product_name = "velvet1"
+name = "velvet"
+product_name = "velvet"
 vendor_id = 0x4c4b
 product_id = 0x4643
 manufacturer = "pkk"
@@ -30,10 +30,10 @@ _     LCtrl    LAlt    LShift     MO(1)     MO(2)     Space    Backspace    Dele
 
 [[keymap.layer]]
 keys = """
-_    _     _    _    _     _    _     _    _    _    
-_    _     _    _    _     _    _     _    _    _ 
-_    _     _    _    _     _    _     _    _    _ 
-_    _     _    _    _     _    _     _    _    _ 
+Kc1     Kc2     Kc3     Kc4     Kc5     Kc6     Kc7     Kc8     Kc9     Kc10 
+_        _       _       _       _       _       _       _       _       _ 
+_        _       _       _       _       _       _       _       _       _ 
+_        _       _       _       _       _       _       _       _       _ 
 """
 
 [[keymap.layer]]
