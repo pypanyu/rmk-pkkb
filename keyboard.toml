@@ -1,6 +1,5 @@
-# TEST123
 [keyboard]
-# Replace with your keyboard identity.
+
 name = "velvet"
 product_name = "velvet"
 vendor_id = 0x4c4b
@@ -11,13 +10,15 @@ chip = "rp2040"
 [layout]
 rows = 4
 cols = 10
-layers = 8
+
 matrix_map = """
 (0, 0, L) (0, 1, L) (0, 2, L) (0, 3, L) (0, 4, L)    (0, 5, R) (0, 6, R) (0, 7, R) (0, 8, R) (0, 9, R)
 (1, 0, L) (1, 1, L) (1, 2, L) (1, 3, L) (1, 4, L)    (1, 5, R) (1, 6, R) (1, 7, R) (1, 8, R) (1, 9, R)
 (2, 0, L) (2, 1, L) (2, 2, L) (2, 3, L) (2, 4, L)    (2, 5, R) (2, 6, R) (2, 7, R) (2, 8, R) (2, 9, R)
           (3, 1, L) (3, 2, L) (3, 3, L) (3, 4, L)    (3, 5, R) (3, 6, R) (3, 7, R) (3, 8, R)
 """
+[keymap]
+layers = 8
 
 [[layer]]
 name = "base_layer"
@@ -27,8 +28,6 @@ A     S      D      F      G            H      J      K      L      ENTER
 Z     X      C      V      B            M      N      COMMA  DOT    SLASH
     LCTL    LALT   LSFT   MO(1)        MO(2)  SPACE  RALT   DEL
 """
-
-[storage]
 [storage]
 # clear_storage = true
 # clear_layout = true
