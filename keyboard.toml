@@ -1,3 +1,4 @@
+# TEST123
 [keyboard]
 # Replace with your keyboard identity.
 name = "velvet"
@@ -20,12 +21,11 @@ map = """
 [keymap]
 layers = 8
 
-[[keymap.layer]]
 keys = """
-Q       W        E        R         T         Y         U          I           O           P
-A       S        D        F         G         H         J          K           L         Enter
-Z       X        C        V         B         N         M        Comma        Dot        SLSH    
-_     LCtrl    LAlt    LShift     MO(1)     MO(2)     Space    Backspace    Delete         _ 
+Q W E R T Y U I O P
+A S D F G H J K L Enter
+Z X C V B N M Comma Dot SLSH
+_ LCtrl LAlt LShift MO(1) MO(2) Space Backspace Delete _
 """
 
 [[keymap.layer]]
