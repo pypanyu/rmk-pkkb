@@ -23,7 +23,7 @@ keys = """
 Q     W      E      R      T            Y      U      I      O      P
 A     S      D      F      G            H      J      K      L      ENTER
 Z     X      C      V      B            M      N      COMMA  DOT    SLASH
-    LCTL    LALT   LSFT   MO(1)        MO(2)  SPACE  RALT   DEL
+    LCTL    LALT   LSFT   MO(1)      SPACE   MO(2)   RALT   DEL
 """
 
 [storage]
