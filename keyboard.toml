@@ -70,7 +70,7 @@ combo_max_num = 25
 # Maximum number of keys pressed simultaneously in a combo
 combo_max_length = 4
 # Default debounce time in milliseconds  
-debounce_time = 5
+debounce_time = 15
 morse_max_num = 32
 # Maximum number of patterns a morse key can handle (default: 8, min: 4, max 65536)
 max_patterns_per_key = 4
