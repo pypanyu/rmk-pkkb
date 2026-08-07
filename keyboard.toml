@@ -28,7 +28,6 @@ Z     X      C      V      B            N      M      COMMA  DOT    SLASH
 
 [storage]
 # clear_storage = true
-clear_layout = true
 
 [split]
 connection = "serial"
