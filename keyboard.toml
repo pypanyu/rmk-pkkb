@@ -12,83 +12,75 @@ rows = 4
 cols = 10
 layers = 8
 keymap = [
-    # Layer 0
+    # Layer 0 (默认 base, QWERTY) — 无物理切换键
     [
         ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
         ["A", "S", "D", "F", "G", "H", "J", "K", "L", "Enter"],
         ["Z", "X", "C", "V", "B", "N", "M", "Comma", "Dot", "Delete"],
         ["_", "_", "_", "LShift", "Space", "LT(2, Space)", "RAlt", "_", "_", "_" ]
     ],
-    # Layer 1 (Left half only)
+    # Layer 1
     [
         ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_" ]
     ],
     # Layer 2
     [
         ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_" ]
     ],
     # Layer 3
     [
         ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_" ]
     ],
-    # Layer 4 (empty/transparent)
+    # Layer 4 (WKL base layout — WinKeyLess，不含物理切换键)
     [
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
+        ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
+        ["A", "S", "D", "F", "G", "H", "J", "K", "L", "Enter"],
+        ["Z", "X", "C", "V", "B", "N", "M", "Comma", "Dot", "Delete"],
+        ["LCtrl", "_", "_", "LShift", "Space", "LT(2, Space)", "RAlt", "_", "_", "_" ]
+        # bottom row 使用 LCtrl (代替 LGui) 以实现 WinKeyLess 行为
     ],
     # Layer 5
     [
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_" ]
     ],
     # Layer 6
     [
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_" ]
     ],
     # Layer 7
     [
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
-        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_" ]
     ]
 ]
 
 [rmk]
-# Maximum number of combos keyboard can store
 combo_max_num = 25
-# Maximum number of keys pressed simultaneously in a combo
 combo_max_length = 4
-# Default debounce time in milliseconds  
 debounce_time = 5
 morse_max_num = 32
-# Maximum number of patterns a morse key can handle (default: 8, min: 4, max 65536)
 max_patterns_per_key = 4
-# Macro space size in bytes for storing sequences. The maximum number of Macros depends on the size of each sequence: All sequences combined need to fit into macro_space_size, the number of macro sequences doesn't matter.
 
 [host]
-# Enable or disable Vial support (default: true)
 vial_enabled = true
-
-# Unlock keys for Vial security (optional)
-# Keys must be pressed simultaneously to unlock Vial configuration
-unlock_keys = [[0, 0], [0, 1]]  # Keys at (row=0,col=0) and (row=0,col=1)
+unlock_keys = [[0, 0], [0, 1]]
 
 [ble]
 enabled = true
@@ -112,7 +104,6 @@ bootmagic = [0, 0]
 matrix_type = "normal"
 col_pins = ["P1_15", "P1_13", "P1_11", "P0_10", "P0_09"]
 row_pins = ["P1_06", "P0_02", "P0_29", "P0_31"]
-# col2row = true
 
 [[split.peripheral]]
 rows = 4
@@ -125,4 +116,3 @@ bootmagic = [0, 0]
 matrix_type = "normal"
 col_pins = ["P1_15", "P1_13", "P1_11", "P0_10", "P0_09"]
 row_pins = ["P1_06", "P0_02", "P0_29", "P0_31"]
-# col2row = true
