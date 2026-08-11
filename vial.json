@@ -56,7 +56,6 @@
       }
   ],
     
-   "defaultLayout": "WKL",
   "layouts": {
     "WKL": {
       "label": "WKL",
@@ -123,7 +122,6 @@
   ]
       ]
     },
-    "HHKB": {
       "label": "HHKB",
       "layout": [
        [
