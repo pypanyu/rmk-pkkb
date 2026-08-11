@@ -12,12 +12,12 @@ rows = 4
 cols = 10
 layers = 8
 keymap = [
-    # Layer 0 (默认 base, QWERTY) — 无物理切换键
+    # Layer 0 
     [
         ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
         ["A", "S", "D", "F", "G", "H", "J", "K", "L", "Enter"],
         ["Z", "X", "C", "V", "B", "N", "M", "Comma", "Dot", "Delete"],
-        ["_", "_", "_", "LShift", "Space", "LT(2, Space)", "RAlt", "_", "_", "_" ]
+        ["LCtrl", "_", "_", "LShift", "Space", "LT(2, Space)", "RAlt", "_", "_","Delete" ]
     ],
     # Layer 1
     [
@@ -40,13 +40,12 @@ keymap = [
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_" ]
     ],
-    # Layer 4 (WKL base layout — WinKeyLess，不含物理切换键)
+    # Layer 4
     [
-        ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
-        ["A", "S", "D", "F", "G", "H", "J", "K", "L", "Enter"],
-        ["Z", "X", "C", "V", "B", "N", "M", "Comma", "Dot", "Delete"],
-        ["LCtrl", "_", "_", "LShift", "Space", "LT(2, Space)", "RAlt", "_", "_", "_" ]
-        # bottom row 使用 LCtrl (代替 LGui) 以实现 WinKeyLess 行为
+        ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
+        ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_" ]
     ],
     # Layer 5
     [
@@ -72,7 +71,7 @@ keymap = [
 ]
 
 [rmk]
-combo_max_num = 25
+combo_max_num = 32
 combo_max_length = 4
 debounce_time = 5
 morse_max_num = 32
