@@ -7,12 +7,10 @@ product_id = 0x4643
 manufacturer = "rmk"
 chip = "nrf52840"
 
-
-[layout.WKL]
+[layout]
 rows = 4
 cols = 10
 layers = 8
-# For safety, use the same keymap as the default layout; users can edit per-layout keymaps in Vial.
 keymap = [
     [
         ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
@@ -21,21 +19,7 @@ keymap = [
         ["LCtrl", "_", "LShift", "Space", "_",  "_", "LT(2, Space)", "RAlt", "_", "Delete" ]
     ]
  ]
-    
-[layout.HHKB]
-rows = 4
-cols = 10
-layers = 8
-# Duplicate keymap for HHKB variant. Adjustments can be made later if you want different physical bottom-row mapping.
-keymap = [
-   [
-        ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
-        ["A", "S", "D", "F", "G", "H", "J", "K", "L", "Enter"],
-        ["Z", "X", "C", "V", "B", "N", "M", "Comma", "Dot", "Delete"],
-        [ "_", "_", "_", "LShift", "Space", "LT(2, Space)", "RAlt", "_", "_", "_", ]
-    ]
-]
-
+ 
 [rmk]
 combo_max_num = 32
 combo_max_length = 4
