@@ -7,9 +7,6 @@
         "rows": 4,
         "cols": 10
     },
-
-    "layouts": ["WKL", "HHKB"],
-    "defaultLayout": "WKL",
     
     "customKeycodes": [
       {
@@ -58,7 +55,8 @@
           "shortName": "Switch\nOutput"
       }
   ],
-    
+    "labels": ["WKL", "HHKB"],
+    "defaultLayout": "WKL",
   "layouts": {
        "keymap": [
       [
