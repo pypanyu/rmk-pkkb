@@ -7,9 +7,6 @@ product_id = 0x4643
 manufacturer = "rmk"
 chip = "nrf52840"
 
-[layouts]
-layouts = ["WKL", "HHKB"]
-default = "WKL"
 
 [layouts.WKL]
 rows = 4
