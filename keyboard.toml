@@ -85,7 +85,8 @@ keymap = [
         ["A", "S", "D", "F", "G", "H", "J", "K", "L", "Enter"],
         ["Z", "X", "C", "V", "B", "N", "M", "Comma", "Dot", "Delete"],
         ["LCtrl", "_", "_", "LShift", "Space", "LT(2, Space)", "RAlt", "_", "_","Delete" ]
-    ],
+    ]
+ ]
     
 [layouts.HHKB]
 rows = 4
@@ -98,7 +99,8 @@ keymap = [
         ["A", "S", "D", "F", "G", "H", "J", "K", "L", "Enter"],
         ["Z", "X", "C", "V", "B", "N", "M", "Comma", "Dot", "Delete"],
         [ "_", "_", "_", "LShift", "Space", "LT(2, Space)", "RAlt", "_", "_", "_", ]
-    ],
+    ]
+]
 
 [rmk]
 combo_max_num = 32
