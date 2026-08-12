@@ -55,9 +55,9 @@
           "shortName": "Switch\nOutput"
       }
   ],
-    "labels": ["WKL", "HHKB"],
-    "defaultLayout": "WKL",
+    
   "layouts": {
+       "labels": ["WKL", "HHKB"],
        "keymap": [
       [
     "0,0",
