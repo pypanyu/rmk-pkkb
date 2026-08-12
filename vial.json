@@ -57,8 +57,7 @@
   ],
     
   "layouts": {
-       "labels": ["WKL", "HHKB"],
-       "keymap": [
+     "keymap": [
       [
     "0,0",
     "0,1",
