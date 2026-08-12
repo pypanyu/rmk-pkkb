@@ -8,7 +8,7 @@ manufacturer = "rmk"
 chip = "nrf52840"
 
 
-[layouts.WKL]
+[layout.WKL]
 rows = 4
 cols = 10
 layers = 8
@@ -22,7 +22,7 @@ keymap = [
     ]
  ]
     
-[layouts.HHKB]
+[layout.HHKB]
 rows = 4
 cols = 10
 layers = 8
