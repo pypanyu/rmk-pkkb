@@ -97,6 +97,6 @@ battery_adc_pin = "vddh"
 [matrix]
 # Matrix pins are required.
 row_pins = ["P1_06", "P0_02", "P0_29", "P0_31"]
-col_pins = ["P1_15", "P1_13", "P1_11", "P0_10", "P0_09", "P0_17", "P0_20", "P0_22", "P0_24", "P1_04"]
+col_pins = ["P1_15", "P1_13", "P1_11", "P0_10", "P0_09", "P0_17", "P0_20", "P0_22", "P0_00", "P1_04"]
 # Default diode direction is col2row; set `row2col = true` if needed.
 # row2col = true
