@@ -1,13 +1,54 @@
-name: Build RMK firmware
+name: Build Toykit v2 dongle firmware
+
+# Builds the firmware directly with `cargo build` (NOT the official
+# `rmk-rs/rmk` reusable workflow). Reason: the reusable workflow installs the
+# *published* `rmkit` CLI, which still depends on `rmk-config` 0.6.0 and cannot
+# parse the `[split.central.display]` section added for the bongocat OLED.
+#
+# This workflow builds against the `rmk` crate pinned to git `main` in
+# Cargo.toml, whose `rmk_central`/`rmk_peripheral` macros DO understand
+# `display`. No `rmkit` CLI is involved, so the parse error cannot occur.
+#
+# NOTE: the first build compiles RMK (and the whole nRF BLE stack) from source
+# and can take 15-25 minutes. Later runs are served from cargo cache.
+
 on:
   workflow_dispatch:
   push:
     paths:
       - "**"
 
+env:
+  RUST_MIN_STACK: "67108864"
+
 jobs:
   build:
-    uses: rmk-rs/rmk/.github/workflows/user_build.yml@main
-    with:
-      keyboard_toml_path: "keyboard.toml"
-      vial_json_path: "vial.json"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@1.96.0
+        with:
+          targets: thumbv7em-none-eabihf
+          components: llvm-tools, rustfmt
+
+      - name: Install build tools (flip-link, cargo-make, objcopy, hex-to-uf2)
+        run: cargo install flip-link cargo-make cargo-binutils cargo-hex-to-uf2
+
+      - name: Cache cargo registry and target
+        uses: Swatinem/rust-cache@v2
+
+      - name: Build firmware (release) — central + 2 peripherals
+        run: cargo build --release
+
+      - name: Generate .uf2 / .hex for all three images
+        run: cargo make uf2
+
+      - name: Upload firmware artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: toykit-dongle-firmware
+          path: |
+            *.uf2
+            *.hex
