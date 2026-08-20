@@ -15,7 +15,7 @@ path = "src/lib.rs"
 [dependencies]
 # NOTE: the `display` + `ssd1306` features enable the OLED; they require a
 # recent RMK (>= 0.8, or `main`). Pin to a tag/rev that has them if needed.
-rmk = { git = "https://github.com/rmk-rs/rmk", branch = "main", default-features = false, features = [
+rmk = { git = "https://github.com/rmk-rs/rmk", rev = "f8da2742971d048e0080e57d69d98f00a859e4e9", default-features = false, features = [
     "defmt",
     "storage",
     "vial",
