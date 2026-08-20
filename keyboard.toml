@@ -68,6 +68,8 @@ connection = "ble"
 [split.central]
 rows = 0
 cols = 0
+row_offset = 0
+col_offset = 0
 
 [split.central.matrix]
 matrix_type = "direct_pin"
