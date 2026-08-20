@@ -13,6 +13,8 @@ command = "cargo"
 args = [
     "objcopy",
     "--release",
+    "--target",
+    "thumbv7em-none-eabihf",
     "--bin",
     "central",
     "--",
@@ -31,6 +33,8 @@ command = "cargo"
 args = [
     "objcopy",
     "--release",
+    "--target",
+    "thumbv7em-none-eabihf",
     "--bin",
     "peripheral",
     "--",
@@ -49,6 +53,8 @@ command = "cargo"
 args = [
     "objcopy",
     "--release",
+    "--target",
+    "thumbv7em-none-eabihf",
     "--bin",
     "peripheral2",
     "--",
