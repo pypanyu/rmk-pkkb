@@ -128,7 +128,6 @@ battery_adc_pin = "vddh"
 
 [storage]
 enabled = true
-clear_storage = true
 
 [split]
 connection = "ble"
