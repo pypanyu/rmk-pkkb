@@ -150,21 +150,6 @@ col_offset = 0
 matrix_type = "direct_pin"
 direct_pins = []
 
-# Small OLED on the dongle, driven by the custom bongocat renderer.
-[split.central.display]
-driver = "ssd1306"
-size = "128x64"
-rotation = 0
-# Full Rust path to our renderer (defined in src/bongocat.rs, exported by src/lib.rs).
-renderer = "toykit_dongle::BongoCatRenderer"
-# Redraw periodically so the cat can idle-animate; coalesce fast key events.
-render_interval = 40
-min_render_interval = 10
-[split.central.display.protocol.i2c]
-instance = "TWISPI0"
-scl = "P0_17"
-sda = "P0_20"
-
 # Left half becomes peripheral 0 (originally the central half).
 [[split.peripheral]]
 rows = 4
