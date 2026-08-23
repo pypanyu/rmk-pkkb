@@ -105,3 +105,23 @@ keymap = [
         ["_", "_", "_", "LShift", "Space", "MO(2)", "RAlt", "_", "_", "_"],
     ],
 ]
+
+[rmk]
+# Maximum number of combos keyboard can store
+combo_max_num = 25
+# Maximum number of keys pressed simultaneously in a combo
+combo_max_length = 4
+# Default debounce time in milliseconds  
+debounce_time = 5
+morse_max_num = 32
+# Maximum number of patterns a morse key can handle (default: 8, min: 4, max 65536)
+max_patterns_per_key = 4
+# Macro space size in bytes for storing sequences. The maximum number of Macros depends on the size of each sequence: All sequences combined need to fit into macro_space_size, the number of macro sequences doesn't matter.
+
+[host]
+# Enable or disable Vial support (default: true)
+vial_enabled = true
+
+# Unlock keys for Vial security (optional)
+# Keys must be pressed simultaneously to unlock Vial configuration
+unlock_keys = [[0, 0], [0, 1]]  # Keys at (row=0,col=0) and (row=0,col=1)
