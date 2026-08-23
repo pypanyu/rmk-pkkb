@@ -56,56 +56,48 @@ rows = 4
 cols = 10
 layers = 8
 keymap = [
-    # ===== Layer 0: Base (QWERTY) =====
     [
         ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
         ["A", "S", "D", "F", "G", "H", "J", "K", "L", "Enter"],
         ["Z", "X", "C", "V", "B", "N", "M", "Comma", "Dot", "Delete"],
         ["_", "_", "_", "LT(1, LShift)", "Space", "LT(2, Space)", "RAlt", "_", "_", "_"],
     ],
-    # ===== Layer 1: Lower (数字 + 常用符号) =====
     [
         ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
         ["WM(1, LShift)", "WM(2, LShift)", "WM(3, LShift)", "WM(4, LShift)", "WM(5, LShift)", "WM(6, LShift)", "WM(7, LShift)", "WM(8, LShift)", "WM(9, LShift)", "WM(0, LShift)"],
         ["Minus", "WM(Minus, LShift)", "WM(Equal, LShift)", "Equal", "LeftBracket", "RightBracket", "Backslash", "Semicolon", "WM(Semicolon, LShift)", "Backspace"],
         ["_", "_", "_", "LShift", "Space", "MO(2)", "RAlt", "_", "_", "_"],
     ],
-    # ===== Layer 2: Raise (标点 + 括号) =====
     [
         ["Grave", "WM(Grave, LShift)", "WM(1, LShift)", "WM(2, LShift)", "WM(3, LShift)", "WM(4, LShift)", "WM(5, LShift)", "WM(6, LShift)", "WM(7, LShift)", "WM(8, LShift)"],
         ["WM(9, LShift)", "WM(0, LShift)", "LeftBracket", "RightBracket", "WM(LeftBracket, LShift)", "WM(RightBracket, LShift)", "Minus", "WM(Minus, LShift)", "Equal", "WM(Equal, LShift)"],
         ["Semicolon", "WM(Semicolon, LShift)", "Quote", "WM(Quote, LShift)", "Comma", "Slash", "Backslash", "WM(Slash, LShift)", "WM(Backslash, LShift)", "Backspace"],
         ["_", "_", "_", "LShift", "Space", "_", "RAlt", "_", "_", "_"],
     ],
-    # ===== Layer 3: Adjust (系统 / 引导) =====
     [
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["TO(0)", "MO(1)", "MO(2)", "MO(4)", "MO(5)", "MO(6)", "MO(7)", "_", "_", "_"],
         ["Bootloader", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "LShift", "Space", "TO(0)", "RAlt", "_", "_", "_"],
     ],
-    # ===== Layer 4: Nav (方向 + 编辑移动) =====
     [
         ["Home", "PageUp", "PageDown", "End", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "_", "_", "Left", "Down", "Up", "Right", "Enter"],
         ["_", "_", "_", "_", "_", "Delete", "Insert", "Backspace", "_", "_"],
         ["_", "_", "_", "LShift", "Space", "MO(2)", "RAlt", "_", "_", "_"],
     ],
-    # ===== Layer 5: Mouse & Media =====
     [
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["MouseBtn1", "MouseUp", "MouseBtn2", "MouseWheelUp", "_", "MediaPrevTrack", "AudioVolDown", "AudioVolUp", "MediaNextTrack", "MediaPlayPause"],
         ["MouseLeft", "MouseDown", "MouseRight", "MouseWheelDown", "_", "AudioMute", "_", "_", "_", "_"],
         ["_", "_", "_", "LShift", "Space", "MO(2)", "RAlt", "_", "_", "_"],
     ],
-    # ===== Layer 6: Function (F1 - F12) =====
     [
         ["Escape", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9"],
         ["Grave", "F10", "F11", "F12", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "LShift", "Space", "MO(2)", "RAlt", "_", "_", "_"],
     ],
-    # ===== Layer 7: Extras (补充符号) =====
     [
         ["Grave", "WM(Grave, LShift)", "WM(9, LShift)", "WM(0, LShift)", "LeftBracket", "RightBracket", "WM(LeftBracket, LShift)", "WM(RightBracket, LShift)", "WM(Comma, LShift)", "WM(Dot, LShift)"],
         ["WM(2, LShift)", "WM(3, LShift)", "WM(4, LShift)", "WM(5, LShift)", "WM(6, LShift)", "WM(7, LShift)", "WM(8, LShift)", "Minus", "WM(Minus, LShift)", "_"],
