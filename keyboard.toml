@@ -83,12 +83,7 @@ max_patterns_per_key = 4
 # Macro space size in bytes for storing sequences. The maximum number of Macros depends on the size of each sequence: All sequences combined need to fit into macro_space_size, the number of macro sequences doesn't matter.
 
 [host]
-# Enable or disable Vial support (default: true)
-vial_enabled = true
-
-# Unlock keys for Vial security (optional)
-# Keys must be pressed simultaneously to unlock Vial configuration
-unlock_keys = [[0, 0], [0, 1]]  # Keys at (row=0,col=0) and (row=0,col=1)
+insecure=true
 
 [ble]
 enabled = true
