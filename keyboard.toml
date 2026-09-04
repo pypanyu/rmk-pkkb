@@ -7,7 +7,6 @@ manufacturer = "pkk"
 chip = "rp2040"
 
 [keymap]
-default_layer = 0
 layers = [
     { name = "base_layer", keys = """
 Q     W      E      R      T            Y      U      I      O      P
