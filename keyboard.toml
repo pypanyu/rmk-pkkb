@@ -9,7 +9,7 @@ chip = "rp2040"
 [keymap]
 default_layer = 0
 
-[[keymap.layers]]
+[[keymap.keymap_layers]]
 name = "base_layer"
 keys = """
 Q     W      E      R      T            Y      U      I      O      P
@@ -33,11 +33,9 @@ serial = [{ instance = "UART0", tx_pin = "PIN_0", rx_pin = "PIN_1" }]
 
 [split.central.matrix]
 matrix_type = "normal"
-# Default diode direction is col2row; set `row2col = true` if needed.
 row2col = true
 row_pins = ["PIN_2", "PIN_3", "PIN_4", "PIN_5"]
 col_pins = ["PIN_9", "PIN_10", "PIN_11", "PIN_12", "PIN_13"]
-# Hold the key at (row=0,col=0) during boot to drop into the RP2040 bootloader.
 bootmagic = [0, 0]
 
 [[split.peripheral]]
@@ -56,16 +54,11 @@ bootmagic = [0, 0]
 
 [rmk]
 split_peripherals_num = 1
-# Maximum number of combos keyboard can store
 combo_max_num = 25
-# Maximum number of keys pressed simultaneously in a combo
 combo_max_length = 4
-# Default debounce time in milliseconds  
 debounce_time = 15
 morse_max_num = 32
-# Maximum number of patterns a morse key can handle (default: 8, min: 4, max 65536)
 max_patterns_per_key = 4
-# Macro space size in bytes for storing sequences. The maximum number of Macros depends on the size of each sequence: All sequences combined need to fit into macro_space_size, the number of macro [...]
 
 [host]
-insecure=true
+insecure = true
