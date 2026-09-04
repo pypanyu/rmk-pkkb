@@ -85,7 +85,7 @@ max_patterns_per_key = 4
 [host]
 # Enable or disable Vial support (default: true)
 vial_enabled = true
-[host] insecure=true
+insecure=true
 
 # Unlock keys for Vial security (optional)
 # Keys must be pressed simultaneously to unlock Vial configuration
