@@ -8,15 +8,14 @@ chip = "rp2040"
 
 [keymap]
 default_layer = 0
-
-[keymap.layers.0]
-name = "base_layer"
-keys = """
+layers = [
+    { name = "base_layer", keys = """
 Q     W      E      R      T            Y      U      I      O      P
 A     S      D      F      G            H      J      K      L      ENTER
 Z     X      C      V      B            N      M      COMMA  DOT    SLASH
     LCTL    LALT   LSFT   MO(1)      SPACE   MO(2)   RALT   DEL
-"""
+""" }
+]
 
 [storage]
 # clear_storage = true
