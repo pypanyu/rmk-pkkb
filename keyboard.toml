@@ -1,4 +1,4 @@
- #Documentation: https://rmk.rs/docs/configuration.html
+#Documentation: https://rmk.rs/docs/configuration.html
 [keyboard]
 name = "Toykit"
 product_name = "Toykit"
@@ -12,56 +12,56 @@ rows = 4
 cols = 10
 layers = 8
 keymap = [
-    # Layer 0
+    # Layer 0 Base QWERTY
     [
         ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
         ["A", "S", "D", "F", "G", "H", "J", "K", "L", "Enter"],
         ["Z", "X", "C", "V", "B", "N", "M", "Comma", "Dot", "Delete"],
         ["LCtrl", "LGui", "LAlt", "LShift", "Space", "LT(2, Space)", "RAlt", "Left", "Down", "Right" ]
     ],
-    # Layer 1 (Left half only)
+    # Layer 1
     [
         ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
     ],
-    # Layer 2
+    # Layer 2 LT触发层
     [
         ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
     ],
-    # Layer 3
+    # Layer3
     [
         ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
     ],
-    # Layer 4 (empty/transparent)
+    # Layer4 empty
     [
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
     ],
-    # Layer 5
+    # Layer5 empty
     [
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
     ],
-    # Layer 6
+    # Layer6 empty
     [
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"]
     ],
-    # Layer 7
+    # Layer7 empty
     [
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
         ["_", "_", "_", "_", "_", "_", "_", "_", "_", "_"],
@@ -71,19 +71,16 @@ keymap = [
 ]
 
 [rmk]
-# Maximum number of combos keyboard can store
+# Combo设置
 combo_max_num = 25
-# Maximum number of keys pressed simultaneously in a combo
 combo_max_length = 4
-# Default debounce time in milliseconds  
+# 消抖时间 ms
 debounce_time = 5
+# Morse/Tap‑Dance
 morse_max_num = 32
-# Maximum number of patterns a morse key can handle (default: 8, min: 4, max 65536)
 max_patterns_per_key = 4
-# Macro space size in bytes for storing sequences. The maximum number of Macros depends on the size of each sequence: All sequences combined need to fit into macro_space_size, the number of macro sequences doesn't matter.
-
-[host]
-insecure=true
+# Macro存储空间，单位字节
+macro_space_size = 1024
 
 [ble]
 enabled = true
@@ -98,12 +95,12 @@ cols = 5
 row_offset = 0
 col_offset = 0
 ble_addr = [0x18, 0xe2, 0x21, 0x80, 0xc0, 0xc7]
+
 [split.central.matrix]
 bootmagic = [0, 0]
 matrix_type = "normal"
 col_pins = ["P1_15", "P1_13", "P1_11", "P0_10", "P0_09"]
 row_pins = ["P1_06", "P0_02", "P0_29", "P0_31"]
-# col2row = true
 
 [[split.peripheral]]
 rows = 4
@@ -111,9 +108,9 @@ cols = 5
 row_offset = 0
 col_offset = 5
 ble_addr = [0x7e, 0xfe, 0x73, 0x9e, 0x66, 0xe3]
+
 [split.peripheral.matrix]
 bootmagic = [0, 0]
 matrix_type = "normal"
 col_pins = ["P1_15", "P1_13", "P1_11", "P0_10", "P0_09"]
 row_pins = ["P1_06", "P0_02", "P0_29", "P0_31"]
-# col2row = true
