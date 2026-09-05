@@ -10,6 +10,17 @@ chip = "nrf52840"
 [layout]
 rows = 4
 cols = 10
+# 0.9 layout不再放keymap/layers！改用map定义矩阵尺寸
+map = """
+[
+ [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+ [10,11,12,13,14,15,16,17,18,19],
+ [20,21,22,23,24,25,26,27,28,29],
+ [30,31,32,33,34,35,36,37,38,39]
+]
+"""
+
+[keymap]
 layers = 8
 keymap = [
     # Layer 0 Base QWERTY
@@ -71,15 +82,11 @@ keymap = [
 ]
 
 [rmk]
-# Combo设置
 combo_max_num = 25
 combo_max_length = 4
-# 消抖时间 ms
 debounce_time = 5
-# Morse/Tap‑Dance
 morse_max_num = 32
 max_patterns_per_key = 4
-# Macro存储空间，单位字节
 macro_space_size = 1024
 
 [ble]
