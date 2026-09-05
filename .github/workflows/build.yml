@@ -1,13 +1,28 @@
-name: Build RMK firmware
+name: Build Firmware
 on:
-  workflow_dispatch:
   push:
-    paths:
-      - "**"
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
-    uses: rmk-rs/rmk/.github/workflows/user_build.yml@main
-    with:
-      keyboard_toml_path: "keyboard.toml"
-      vial_json_path: "vial.json"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: thumbv7em-none-eabihf
+
+      - name: Install rmkit 0.3.0 (bind RMK 0.9)
+        run: cargo install rmkit --version 0.3.0
+
+      - name: Build firmware
+        run: |
+          rmkit build --keyboard-toml-path keyboard.toml
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          path: ./target/**/*.uf2
