@@ -1,13 +1,78 @@
-name: Build RMK firmware
+name: Build RMK Split Firmware
+
 on:
-  workflow_dispatch:
   push:
-    paths:
-      - "**"
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch: # 支持手动触发CI
 
 jobs:
   build:
-    uses: rmk-rs/rmk/.github/workflows/user_build.yml@main
-    with:
-      keyboard_toml_path: "keyboard.toml"
-      vial_json_path: "vial.json"
+    runs-on: ubuntu‑latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Install yq
+        uses: mikefarah/yq@v4.44.3
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust‑toolchain@stable
+        with:
+          targets: thumbv7em‑none‑eabihf
+
+      - name: Install probe‑rs & rmkit
+        run: |
+          cargo install probe‑rs‑tools
+          cargo install rmkit
+
+      # 仅提取chip字段，不解析layout/keymap，绕过rmkit解析bug
+      - name: Extract chip name
+        id: parse_config
+        run: |
+          CHIP=$(yq -r '.keyboard.chip' keyboard.toml)
+          echo "CHIP=${CHIP}" >> $GITHUB_ENV
+
+      # 生成仅含[keyboard]的临时toml，给rmkit工具调用（metadata等）
+      - name: Prepare temp config for rmkit
+        run: |
+          yq '.keyboard' keyboard.toml > tmp_rmkit.toml
+          cat tmp_rmkit.toml
+
+      - name: RMK metadata (use temp toml)
+        run: rmkit metadata --keyboard‑toml‑path tmp_rmkit.toml
+
+      - name: Build Central firmware
+        run: |
+          cargo clean
+          cargo build --release --bin central
+
+      - name: Build Peripheral firmware
+        run: |
+          cargo clean
+          cargo build --release --bin peripheral
+
+      # 生成UF2固件
+      - name: Generate UF2 files
+        run: |
+          probe‑rs elf2uf2 target/thumbv7em‑none‑eabihf/release/central central_${{env.CHIP}}.uf2
+          probe‑rs elf2uf2 target/thumbv7em‑none‑eabihf/release/peripheral peripheral_${{env.CHIP}}.uf2
+
+      - name: Upload Central artifacts
+        uses: actions/upload‑artifact@v4
+        with:
+          name: central‑firmware
+          retention‑days: 14
+          path: |
+            target/thumbv7em‑none‑eabihf/release/central
+            central_${{env.CHIP}}.uf2
+
+      - name: Upload Peripheral artifacts
+        uses: actions/upload‑artifact@v4
+        with:
+          name: peripheral‑firmware
+          retention‑days: 14
+          path: |
+            target/thumbv7em‑none‑eabihf/release/peripheral
+            peripheral_${{env.CHIP}}.uf2
