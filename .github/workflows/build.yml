@@ -15,13 +15,22 @@ jobs:
         with:
           targets: thumbv7em-none-eabihf
 
-      - name: Install rmkit 0.0.21 (RMK 0.9)
-        run: cargo install rmkit --version 0.0.21
+      # 使用官方脚本安装rmkit v0.0.21（避免crates.io网络问题）
+      - name: Install rmkit v0.0.21
+        run: curl --proto '=https' --tlsv1.2 -LsSf https://github.com/HaoboGu/rmkit/releases/download/v0.0.21/rmkit-installer.sh | sh
 
+      # 1. 根据toml生成完整固件项目，输出目录 ./firmware_proj
+      - name: Generate RMK project
+        run: rmkit create --keyboard-toml-path keyboard.toml --vial-json-path vial.json --target-dir ./firmware_proj
+
+      # 2. 进入项目目录编译
       - name: Build firmware
-        run: rmkit build --keyboard-toml-path keyboard.toml
+        run: |
+          cd ./firmware_proj
+          cargo build --release
 
-      - name: Upload firmware artifacts
+      # 上传生成的uf2固件
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          path: ./target/**/*.uf2
+          path: ./firmware_proj/target/**/*.uf2
