@@ -17,7 +17,6 @@ map = """
 [keymap]
 layers = 8
 [[keymap.layer]]
-name = "Layer0‑Base"
 keys = """
 Q W E R T Y U I O P
 A S D F G H J K L Enter
@@ -25,7 +24,6 @@ Z X C V B N M Comma Dot Delete
 LCtrl LGui LAlt LShift Space LT(2,Space) RAlt Left Down Right
 """
 [[keymap.layer]]
-name = "Layer1"
 keys = """
 1 2 3 4 5 6 7 8 9 0
 _ _ _ _ _ _ _ _ _ _
@@ -33,7 +31,6 @@ _ _ _ _ _ _ _ _ _ _
 _ _ _ _ _ _ _ _ _ _
 """
 [[keymap.layer]]
-name = "Layer2‑LT‑Space"
 keys = """
 1 2 3 4 5 6 7 8 9 0
 _ _ _ _ _ _ _ _ _ _
@@ -41,7 +38,6 @@ _ _ _ _ _ _ _ _ _ _
 _ _ _ _ _ _ _ _ _ _
 """
 [[keymap.layer]]
-name = "Layer3"
 keys = """
 1 2 3 4 5 6 7 8 9 0
 _ _ _ _ _ _ _ _ _ _
@@ -49,7 +45,6 @@ _ _ _ _ _ _ _ _ _ _
 _ _ _ _ _ _ _ _ _ _
 """
 [[keymap.layer]]
-name = "Layer4"
 keys = """
 _ _ _ _ _ _ _ _ _ _
 _ _ _ _ _ _ _ _ _ _
@@ -57,7 +52,6 @@ _ _ _ _ _ _ _ _ _ _
 _ _ _ _ _ _ _ _ _ _
 """
 [[keymap.layer]]
-name = "Layer5"
 keys = """
 _ _ _ _ _ _ _ _ _ _
 _ _ _ _ _ _ _ _ _ _
@@ -65,7 +59,6 @@ _ _ _ _ _ _ _ _ _ _
 _ _ _ _ _ _ _ _ _ _
 """
 [[keymap.layer]]
-name = "Layer6"
 keys = """
 _ _ _ _ _ _ _ _ _ _
 _ _ _ _ _ _ _ _ _ _
@@ -73,7 +66,6 @@ _ _ _ _ _ _ _ _ _ _
 _ _ _ _ _ _ _ _ _ _
 """
 [[keymap.layer]]
-name = "Layer7"
 keys = """
 _ _ _ _ _ _ _ _ _ _
 _ _ _ _ _ _ _ _ _ _
