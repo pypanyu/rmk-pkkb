@@ -85,6 +85,8 @@ morse_max_num = 32
 max_patterns_per_key = 4
 macro_space_size = 1024
 
+[host]
+insecure=true 
 
 [ble]
 enabled = true
