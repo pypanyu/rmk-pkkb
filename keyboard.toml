@@ -32,8 +32,8 @@ name = "base_layer"
 keys = """
 Tab      Q        W        E        R        T        Y        U        I        O        P        Backspace
 CapsLock A        S        D        F        G        H        J        K        L        Enter   _
-Shift    Z        X        C        V        B        N        M      Comma     Dot       MO2     _
-Ctrl     Win      Alt      _        Space     _      AltGr      _       MO1      Ctrl     Del    _
+Shift    Z        X        C        V        B        N        M      Comma     Dot       Delete    _
+Ctrl     Win      Alt      _       Space    _      AltGr      _       MO1      Ctrl     Delete    _
 """
 
 [rmk]
