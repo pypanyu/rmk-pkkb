@@ -32,13 +32,25 @@ impl DisplayRenderer<BinaryColor> for BongoCatRenderer {
     fn render<D: DrawTarget<Color = BinaryColor>>(&mut self, ctx: &RenderContext, display: &mut D) {
         display.clear(BinaryColor::Off).ok();
         let style = MonoTextStyle::new(&FONT_6X10, BinaryColor::On);
+        let stroke = PrimitiveStyle::with_stroke(BinaryColor::On, 1);
 
-        // --- 1. 右上角：电量显示 Battery %
+        // --- 右上角：电池图标 + 电量百分比（修复 BatteryStatusEvent 读取 .percent）
         let mut bat_str: String<16> = String::new();
-        write!(&mut bat_str, "{}%", ctx.battery).ok();
+        write!(&mut bat_str, "{}%", ctx.battery.percent).ok();
+        // 电池外框
+        Rectangle::new(Point::new(80, 6), Size::new(12, 8))
+            .into_styled(stroke)
+            .draw(display)
+            .ok();
+        // 电池正极小凸起
+        Rectangle::new(Point::new(92, 8), Size::new(2, 4))
+            .into_styled(stroke)
+            .draw(display)
+            .ok();
+        // 电量文字
         Text::new(&bat_str, Point::new(96, 10), style).draw(display).ok();
 
-        // --- 2. 左侧：图层名称映射，替代原来 L数字
+        // --- 左侧：图层名称映射
         let layer_name = match ctx.layer {
             0 => "NLCK",
             1 => "LOWER",
@@ -65,7 +77,7 @@ impl DisplayRenderer<BinaryColor> for BongoCatRenderer {
             // => ~1s per bob).
             (self.idle_tick / 24) % 2 == 0
         };
-        // 绘制邦戈猫，坐标微调，放到屏幕右下区域，和参考图对齐
+        // 绘制邦戈猫，坐标右下放置，匹配参考图布局
         draw_cat(display, down);
     }
 }
