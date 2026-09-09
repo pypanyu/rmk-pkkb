@@ -6,11 +6,8 @@
 //!   * a held key (`key_pressed`) keeps the paws down on the bongos,
 //!   * when idle, the cat gently bobs using a slow tick counter.
 //!
-//! Designed for a 128x64 SSD1306. If you use a 128x32 panel, shrink the
-//! coordinates / drop the status line (see `render`).
-
+//! Designed for a 128x64 SSD1306.
 use core::fmt::Write as _;
-
 use embedded_graphics::{
     mono_font::{ascii::FONT_6X10, MonoTextStyle},
     pixelcolor::BinaryColor,
@@ -20,7 +17,6 @@ use embedded_graphics::{
 };
 use heapless::String;
 use rmk::display::{DisplayRenderer, RenderContext};
-
 /// Animated bongocat. Holds a tiny bit of state between renders.
 #[derive(Default)]
 pub struct BongoCatRenderer {
@@ -35,8 +31,24 @@ pub struct BongoCatRenderer {
 impl DisplayRenderer<BinaryColor> for BongoCatRenderer {
     fn render<D: DrawTarget<Color = BinaryColor>>(&mut self, ctx: &RenderContext, display: &mut D) {
         display.clear(BinaryColor::Off).ok();
+        let style = MonoTextStyle::new(&FONT_6X10, BinaryColor::On);
 
-        // --- Animation state machine -------------------------------------
+        // --- 1. 右上角：电量显示 Battery %
+        let mut bat_str: String<16> = String::new();
+        write!(&mut bat_str, "{}%", ctx.battery).ok();
+        Text::new(&bat_str, Point::new(96, 10), style).draw(display).ok();
+
+        // --- 2. 左侧：图层名称映射，替代原来 L数字
+        let layer_name = match ctx.layer {
+            0 => "NLCK",
+            1 => "LOWER",
+            2 => "RAISE",
+            3 => "ADJUST",
+            _ => "UNK",
+        };
+        Text::new(layer_name, Point::new(4, 42), style).draw(display).ok();
+
+        // --- Animation state machine (原邦戈猫动画完全保留，不改动) -------------------------------------
         if ctx.key_press_latch && !self.last_latch {
             // A new key was pressed since the last render -> flip the frame,
             // which makes the cat look like it is drumming.
@@ -44,7 +56,6 @@ impl DisplayRenderer<BinaryColor> for BongoCatRenderer {
         }
         self.last_latch = ctx.key_press_latch;
         self.idle_tick = self.idle_tick.wrapping_add(1);
-
         let down = if ctx.key_pressed {
             true // key held -> paws stay on the bongos
         } else if ctx.key_press_latch {
@@ -54,14 +65,8 @@ impl DisplayRenderer<BinaryColor> for BongoCatRenderer {
             // => ~1s per bob).
             (self.idle_tick / 24) % 2 == 0
         };
-
+        // 绘制邦戈猫，坐标微调，放到屏幕右下区域，和参考图对齐
         draw_cat(display, down);
-
-        // --- Status line (layer + WPM) -----------------------------------
-        let style = MonoTextStyle::new(&FONT_6X10, BinaryColor::On);
-        let mut line: String<32> = String::new();
-        write!(&mut line, "WPM {}  L{}", ctx.wpm, ctx.layer).ok();
-        Text::new(&line, Point::new(2, 62), style).draw(display).ok();
     }
 }
 
@@ -70,49 +75,45 @@ fn draw_cat<D: DrawTarget<Color = BinaryColor>>(display: &mut D, down: bool) {
     let fill = PrimitiveStyle::with_fill(BinaryColor::On);
     let hole = PrimitiveStyle::with_fill(BinaryColor::Off);
     let stroke = PrimitiveStyle::with_stroke(BinaryColor::On, 1);
-
     // Head
-    Circle::new(Point::new(54, 10), 20).into_styled(fill).draw(display).ok();
+    Circle::new(Point::new(74, 22), 20).into_styled(fill).draw(display).ok();
     // Ears
-    Triangle::new(Point::new(54, 10), Point::new(49, 3), Point::new(61, 9))
+    Triangle::new(Point::new(74, 22), Point::new(69, 15), Point::new(81, 21))
         .into_styled(fill)
         .draw(display)
         .ok();
-    Triangle::new(Point::new(74, 10), Point::new(79, 3), Point::new(67, 9))
+    Triangle::new(Point::new(94, 22), Point::new(99, 15), Point::new(87, 21))
         .into_styled(fill)
         .draw(display)
         .ok();
     // Eyes (punch holes so they read as "off" pixels)
-    Circle::new(Point::new(61, 16), 2).into_styled(hole).draw(display).ok();
-    Circle::new(Point::new(69, 16), 2).into_styled(hole).draw(display).ok();
-
+    Circle::new(Point::new(81, 28), 2).into_styled(hole).draw(display).ok();
+    Circle::new(Point::new(89, 28), 2).into_styled(hole).draw(display).ok();
     // Body
-    Rectangle::new(Point::new(50, 28), Size::new(28, 16))
+    Rectangle::new(Point::new(70, 40), Size::new(28, 16))
         .into_styled(fill)
         .draw(display)
         .ok();
-
     // Bongos
-    Circle::new(Point::new(36, 44), 9).into_styled(fill).draw(display).ok();
-    Circle::new(Point::new(86, 44), 9).into_styled(fill).draw(display).ok();
-
+    Circle::new(Point::new(56, 56), 9).into_styled(fill).draw(display).ok();
+    Circle::new(Point::new(106, 56), 9).into_styled(fill).draw(display).ok();
     // Arms + paws. Paws are raised when `down == false`, on the bongos when true.
-    let paw_y = if down { 40 } else { 26 };
+    let paw_y = if down { 52 } else { 38 };
     // Left arm
-    Line::new(Point::new(54, 32), Point::new(42, paw_y))
+    Line::new(Point::new(74, 44), Point::new(62, paw_y))
         .into_styled(stroke)
         .draw(display)
         .ok();
-    Circle::new(Point::new(40, paw_y.saturating_sub(2)), 4)
+    Circle::new(Point::new(60, paw_y.saturating_sub(2)), 4)
         .into_styled(fill)
         .draw(display)
         .ok();
     // Right arm
-    Line::new(Point::new(74, 32), Point::new(86, paw_y))
+    Line::new(Point::new(94, 44), Point::new(106, paw_y))
         .into_styled(stroke)
         .draw(display)
         .ok();
-    Circle::new(Point::new(84, paw_y.saturating_sub(2)), 4)
+    Circle::new(Point::new(104, paw_y.saturating_sub(2)), 4)
         .into_styled(fill)
         .draw(display)
         .ok();
