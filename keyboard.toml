@@ -1,6 +1,6 @@
 [keyboard]
-name = "Toykit"
-product_name = "Toykit"
+name = "Totem"
+product_name = "Totem"
 vendor_id = 0x4c4b
 product_id = 0x4643
 manufacturer = "rmk"
@@ -119,3 +119,17 @@ bootmagic = [0, 0]
 matrix_type = "normal"
 col_pins = ["P1_15", "P1_13", "P1_11", "P0_10", "P0_09"]
 row_pins = ["P1_06", "P0_02", "P0_29", "P0_31"]
+
+[[split.peripheral]]
+rows = 4
+cols = 5
+row_offset = 0
+col_offset = 5
+ble_addr = [0x7e, 0xfe, 0x73, 0x9e, 0x66, 0xe3]
+
+[split.peripheral.matrix]
+bootmagic = [0, 0]
+matrix_type = "normal"
+col_pins = ["P1_15", "P1_13", "P1_11", "P0_10", "P0_09"]
+row_pins = ["P1_06", "P0_02", "P0_29", "P0_31"]
+
