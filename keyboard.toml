@@ -99,37 +99,34 @@ rows = 4
 cols = 5
 row_offset = 0
 col_offset = 0
-ble_addr = [0x18, 0xe2, 0x21, 0x80, 0xc0, 0xc7]
 
 [split.central.matrix]
 bootmagic = [0, 0]
 matrix_type = "normal"
-col_pins = ["P1_15", "P1_13", "P1_11", "P0_10", "P0_09"]
-row_pins = ["P1_06", "P0_02", "P0_29", "P0_31"]
+col_pins = ["P0_04", "P0_05", "P1_15", "P1_16", "P1_13"]
+row_pins = ["P0_02", "P0_03", "P0_28", "P0_29"]
 
 [[split.peripheral]]
 rows = 4
 cols = 5
 row_offset = 0
 col_offset = 5
-ble_addr = [0x7e, 0xfe, 0x73, 0x9e, 0x66, 0xe3]
 
 [split.peripheral.matrix]
 bootmagic = [0, 0]
 matrix_type = "normal"
-col_pins = ["P1_15", "P1_13", "P1_11", "P0_10", "P0_09"]
-row_pins = ["P1_06", "P0_02", "P0_29", "P0_31"]
+col_pins = ["P0_04", "P0_05", "P1_15", "P1_16", "P1_13"]
+row_pins = ["P0_02", "P0_03", "P0_28", "P0_29"]
 
 [[split.peripheral]]
 rows = 4
 cols = 5
 row_offset = 0
 col_offset = 5
-ble_addr = [0x7e, 0xfe, 0x73, 0x9e, 0x66, 0xe3]
 
 [split.peripheral.matrix]
 bootmagic = [0, 0]
 matrix_type = "normal"
-col_pins = ["P1_15", "P1_13", "P1_11", "P0_10", "P0_09"]
-row_pins = ["P1_06", "P0_02", "P0_29", "P0_31"]
+col_pins = ["P0_04", "P0_05", "P1_15", "P1_16", "P1_13"]
+row_pins = ["P0_02", "P0_03", "P0_28", "P0_29"]
 
