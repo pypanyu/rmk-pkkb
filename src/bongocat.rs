@@ -1,132 +1,185 @@
-//! Bongocat OLED renderer for the Toykit v2 dongle.
-//!
-//! Implements [`rmk::display::DisplayRenderer`] for a monochrome (BinaryColor)
-//! display. The cat "drums" whenever a key is pressed:
-//!   * a fresh key press (`key_press_latch`) flips the animation frame,
-//!   * a held key (`key_pressed`) keeps the paws down on the bongos,
-//!   * when idle, the cat gently bobs using a slow tick counter.
-//!
-//! Designed for a 128x64 SSD1306.
-use core::fmt::Write as _;
-use embedded_graphics::{
-    mono_font::{ascii::FONT_6X10, MonoTextStyle},
-    pixelcolor::BinaryColor,
-    prelude::*,
-    primitives::{Circle, Line, PrimitiveStyle, Rectangle, Triangle},
-    text::Text,
-};
-use heapless::String;
-use rmk::display::{DisplayRenderer, RenderContext};
-/// Animated bongocat. Holds a tiny bit of state between renders.
-#[derive(Default)]
-pub struct BongoCatRenderer {
-    /// Toggles between the two drum frames on each fresh key press.
-    frame: bool,
-    /// Edge tracking for `key_press_latch`.
-    last_latch: bool,
-    /// Free-running counter used to idle-animate (bob) when no key is active.
-    idle_tick: u32,
-}
+#!/usr/bin/env python3
+"""
+Draw a CC0-style sitting-cat-plays-bongo sprite (96x48) adapted from
+Shepardskin's CC0 Cat Sprites (OpenGameArt, 2014):
+    https://opengameart.org/node/21390
+(CC0 1.0 Universal — free to adapt, no attribution required.)
 
-impl DisplayRenderer<BinaryColor> for BongoCatRenderer {
-    fn render<D: DrawTarget<Color = BinaryColor>>(&mut self, ctx: &RenderContext, display: &mut D) {
-        display.clear(BinaryColor::Off).ok();
-        let style = MonoTextStyle::new(&FONT_6X10, BinaryColor::On);
-        let stroke = PrimitiveStyle::with_stroke(BinaryColor::On, 1);
+Layout (96 cols x 48 rows, top-left origin, y grows downward):
+  - Vertical split (when placed into 128x64):
+      Row  0..15 : top text strip (WPM/battery/Layer drawn by Rust)
+      Row 16..63 : this bitmap (placed at y=16, x=(128-96)/2=16)
+  - Scene (96x48) contains:
+      - left bongo drum (cx~22, cy~36)
+      - right bongo drum (cx~76, cy~36)
+      - sitting cat in the middle facing RIGHT:
+          body oval at  (48, 24), head at (60, 14)
+          2 ears on top, 1 eye, curl-tail on the left, 2 legs, 2 arms
 
-        // --- 右上角：电池图标 + 电量百分比（修复 BatteryStatusEvent 读取 .percent）
-        let mut bat_str: String<16> = String::new();
-        write!(&mut bat_str, "{}%", ctx.battery.percent).ok();
-        // 电池外框
-        Rectangle::new(Point::new(80, 6), Size::new(12, 8))
-            .into_styled(stroke)
-            .draw(display)
-            .ok();
-        // 电池正极小凸起
-        Rectangle::new(Point::new(92, 8), Size::new(2, 4))
-            .into_styled(stroke)
-            .draw(display)
-            .ok();
-        // 电量文字
-        Text::new(&bat_str, Point::new(96, 10), style).draw(display).ok();
+We emit two animation frames so the toykit can flip on each key press:
+  - CAT_DOWN : both paws down on the bongos
+  - CAT_UP   : left paw raised (mid-strike)
+"""
+from PIL import Image, ImageDraw
 
-        // --- 左侧：图层名称映射
-        let layer_name = match ctx.layer {
-            0 => "NLCK",
-            1 => "LOWER",
-            2 => "RAISE",
-            3 => "ADJUST",
-            _ => "UNK",
-        };
-        Text::new(layer_name, Point::new(4, 42), style).draw(display).ok();
+W, H = 80, 40
 
-        // --- Animation state machine (原邦戈猫动画完全保留，不改动) -------------------------------------
-        if ctx.key_press_latch && !self.last_latch {
-            // A new key was pressed since the last render -> flip the frame,
-            // which makes the cat look like it is drumming.
-            self.frame = !self.frame;
-        }
-        self.last_latch = ctx.key_press_latch;
-        self.idle_tick = self.idle_tick.wrapping_add(1);
-        let down = if ctx.key_pressed {
-            true // key held -> paws stay on the bongos
-        } else if ctx.key_press_latch {
-            self.frame // just pressed -> show the toggled frame
-        } else {
-            // Idle: bob slowly (toggle every 24 renders; render_interval=40ms
-            // => ~1s per bob).
-            (self.idle_tick / 24) % 2 == 0
-        };
-        // 绘制邦戈猫，坐标右下放置，匹配参考图布局
-        draw_cat(display, down);
-    }
-}
+def new_canvas():
+    return Image.new("L", (W, H), 0)
 
-/// Draw a simple bongocat. `down == true` puts the paws on the bongos.
-fn draw_cat<D: DrawTarget<Color = BinaryColor>>(display: &mut D, down: bool) {
-    let fill = PrimitiveStyle::with_fill(BinaryColor::On);
-    let hole = PrimitiveStyle::with_fill(BinaryColor::Off);
-    let stroke = PrimitiveStyle::with_stroke(BinaryColor::On, 1);
-    // Head
-    Circle::new(Point::new(74, 22), 20).into_styled(fill).draw(display).ok();
-    // Ears
-    Triangle::new(Point::new(74, 22), Point::new(69, 15), Point::new(81, 21))
-        .into_styled(fill)
-        .draw(display)
-        .ok();
-    Triangle::new(Point::new(94, 22), Point::new(99, 15), Point::new(87, 21))
-        .into_styled(fill)
-        .draw(display)
-        .ok();
-    // Eyes (punch holes so they read as "off" pixels)
-    Circle::new(Point::new(81, 28), 2).into_styled(hole).draw(display).ok();
-    Circle::new(Point::new(89, 28), 2).into_styled(hole).draw(display).ok();
-    // Body
-    Rectangle::new(Point::new(70, 40), Size::new(28, 16))
-        .into_styled(fill)
-        .draw(display)
-        .ok();
-    // Bongos
-    Circle::new(Point::new(56, 56), 9).into_styled(fill).draw(display).ok();
-    Circle::new(Point::new(106, 56), 9).into_styled(fill).draw(display).ok();
-    // Arms + paws. Paws are raised when `down == false`, on the bongos when true.
-    let paw_y = if down { 52 } else { 38 };
-    // Left arm
-    Line::new(Point::new(74, 44), Point::new(62, paw_y))
-        .into_styled(stroke)
-        .draw(display)
-        .ok();
-    Circle::new(Point::new(60, paw_y.saturating_sub(2)), 4)
-        .into_styled(fill)
-        .draw(display)
-        .ok();
-    // Right arm
-    Line::new(Point::new(94, 44), Point::new(106, paw_y))
-        .into_styled(stroke)
-        .draw(display)
-        .ok();
-    Circle::new(Point::new(104, paw_y.saturating_sub(2)), 4)
-        .into_styled(fill)
-        .draw(display)
-        .ok();
-}
+def to_binary(img_l):
+    return img_l.point(lambda v: 1 if v >= 128 else 0, mode="1")
+
+def ellipse_filled(img, cx, cy, rx, ry, fill=255):
+    ImageDraw.Draw(img).ellipse(
+        [cx - rx, cy - ry, cx + rx, cy + ry], fill=fill)
+
+def ellipse_outline(img, cx, cy, rx, ry, fill=255):
+    ImageDraw.Draw(img).ellipse(
+        [cx - rx, cy - ry, cx + rx, cy + ry], outline=fill)
+
+def triangle(img, pts, fill=255):
+    ImageDraw.Draw(img).polygon(pts, fill=fill)
+
+
+def draw_cat(img, *, left_paw_up=False):
+    """Draw CC0-style cat sitting between two bongos, facing right."""
+    d = ImageDraw.Draw(img)
+
+    # ===== Floor baseline (subtle horizontal line — helps the eye) =====
+    d.line([(2, 36), (W - 2, 36)], fill=255, width=1)
+
+    # ===== Left bongo =====
+    L_cx, L_cy = 18, 30
+    L_rx, L_ry = 9, 7
+    ellipse_filled(img, L_cx, L_cy, L_rx, L_ry)               # drum body
+    ellipse_filled(img, L_cx, L_cy - 2, L_rx - 1, 2, 0)       # drum hole / opening (black)
+    d.line([(L_cx - L_rx + 1, L_cy + 1),
+            (L_cx + L_rx - 1, L_cy + 1)], fill=255, width=1) # band
+
+    # ===== Right bongo (bigger) =====
+    R_cx, R_cy = 64, 30
+    R_rx, R_ry = 11, 8
+    ellipse_filled(img, R_cx, R_cy, R_rx, R_ry)
+    ellipse_filled(img, R_cx, R_cy - 2, R_rx - 1, 2, 0)
+    d.line([(R_cx - R_rx + 1, R_cy + 1),
+            (R_cx + R_rx - 1, R_cy + 1)], fill=255, width=1)
+
+    # ===== Cat body (oval, slightly squashed) =====
+    body_cx, body_cy = 40, 22
+    body_rx, body_ry = 11, 8
+    ellipse_filled(img, body_cx, body_cy, body_rx, body_ry)
+    # white belly patch (cartoon contrast)
+    ellipse_filled(img, body_cx + 1, body_cy + 2,
+                   body_rx - 4, body_ry - 4, 255)
+
+    # ===== Head (positioned above + to the right) =====
+    head_cx, head_cy = body_cx + 9, body_cy - 7
+    head_r = 6
+    ellipse_filled(img, head_cx, head_cy, head_r, head_r)
+    # white muzzle (right side of face)
+    ellipse_filled(img, head_cx + 3, head_cy + 1, 3, 3, 255)
+    # single eye (on the right side of the head since cat faces right)
+    ellipse_filled(img, head_cx + 2, head_cy - 1, 1, 1, 0)
+    # nose - tiny black dot
+    ellipse_filled(img, head_cx + 5, head_cy + 2, 1, 1, 0)
+    # white whisker hint (single short stroke, right)
+    d.line([(head_cx + 5, head_cy + 3),
+            (head_cx + 7, head_cy + 4)], fill=0, width=1)
+
+    # ===== Ears (two triangles on top of head) =====
+    triangle(img, [(head_cx - 4, head_cy - 4),
+                   (head_cx - 2, head_cy - 8),
+                   (head_cx - 0, head_cy - 4)])     # rear (left) ear
+    triangle(img, [(head_cx + 1, head_cy - 4),
+                   (head_cx + 4, head_cy - 9),
+                   (head_cx + 6, head_cy - 4)])     # front (right) ear
+
+    # ===== Tail (curls up over body toward left) =====
+    d.line([(body_cx - body_rx, body_cy + 0),
+            (body_cx - body_rx - 3, body_cy - 4),
+            (body_cx - body_rx - 2, body_cy - 8),
+            (body_cx - body_rx + 2, body_cy - 7)], fill=255, width=2)
+
+    # ===== Back ridge (CC0 sprite has these little back-spikes) =====
+    for dx in (-6, -3, 0, 3):
+        d.line([(body_cx + dx, body_cy - body_ry),
+                (body_cx + dx, body_cy - body_ry - 2)], fill=255, width=1)
+
+    # ===== Legs (two visible legs, ending on respective drums) =====
+    # back leg → left drum
+    d.line([(body_cx - 7, body_cy + body_ry - 1),
+            (L_cx + 3,  L_cy - 1)], fill=255, width=2)
+    # front leg → right drum
+    d.line([(body_cx + 7, body_cy + body_ry - 1),
+            (R_cx - 4,  R_cy - 1)], fill=255, width=2)
+
+    # ===== Arms =====
+    # right arm always reaching to right drum
+    d.line([(body_cx + 9, body_cy + 4),
+            (R_cx - 5, R_cy - R_ry + 1)], fill=255, width=2)
+    ellipse_filled(img, R_cx - 5, R_cy - R_ry + 1, 2, 1, 255)
+
+    # left arm:  either down on left drum or raised up (mid-strike)
+    if left_paw_up:
+        # raised up to the left, arm bent upward
+        d.line([(body_cx + 6, body_cy + 3),
+                (body_cx + 1, body_cy - 7)], fill=255, width=2)
+        d.line([(body_cx + 1, body_cy - 7),
+                (L_cx + 6, body_cy - 9)], fill=255, width=2)
+        ellipse_filled(img, L_cx + 6, body_cy - 9, 2, 2, 255)
+    else:
+        # down on left drum
+        d.line([(body_cx + 6, body_cy + 5),
+                (L_cx + 5, L_cy - L_ry + 1)], fill=255, width=2)
+        ellipse_filled(img, L_cx + 5, L_cy - L_ry + 1, 2, 2, 255)
+
+
+def emit_frame(name, left_paw_up):
+    img = new_canvas()
+    draw_cat(img, left_paw_up=left_paw_up)
+    img.save(f"cat_source/{name}_art.png")
+    bw = to_binary(img)
+    bw.save(f"cat_source/{name}_bw.png")
+    pixels = bw.load()
+    byte_rows = []
+    # 96 cols / 8 = 12 bytes per row; 48 rows => 12*48 = 576 bytes/frame
+    for y in range(H):
+        for col in range(0, W, 8):
+            b = 0
+            for bit in range(8):
+                if col + bit < W and pixels[col + bit, y]:
+                    b |= 1 << (7 - bit)
+            byte_rows.append(b)
+    return byte_rows
+
+
+def fmt_const(name, data):
+    lines = []
+    for i in range(0, len(data), 12):
+        chunk = ", ".join(f"0x{b:02X}" for b in data[i:i + 12])
+        lines.append("    " + chunk + ",")
+    body = "\n".join(lines)
+    return f"const {name}: [u8; {len(data)}] = [\n{body}\n];\n"
+
+
+if __name__ == "__main__":
+    out_down = emit_frame("frame_down", left_paw_up=False)
+    out_up   = emit_frame("frame_up",   left_paw_up=True)
+
+    text = (
+        "// Auto-generated by gen_cc0_cat.py — 80x40, 1 bpp, MSB-first.\n"
+        "// Adapted from Shepardskin's CC0 Cat Sprites (OpenGameArt, 2014):\n"
+        "//   https://opengameart.org/node/21390  (CC0 1.0 Universal).\n\n"
+        f"pub const CAT_W: u32 = {W};\n"
+        f"pub const CAT_H: u32 = {H};\n"
+        f"pub const CAT_BYTES: usize = {W // 8} * {H};\n\n"
+        + fmt_const("CAT_DOWN", out_down) + "\n"
+        + fmt_const("CAT_UP",   out_up)
+    )
+    with open("cat_source/rust_const_arrays.txt", "w", encoding="utf-8") as f:
+        f.write(text)
+    # print first 30 lines only
+    for line in text.splitlines()[:30]:
+        print(line)
+    print("... (truncated; full content saved to cat_source/rust_const_arrays.txt)")
