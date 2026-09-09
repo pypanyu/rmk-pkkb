@@ -33,8 +33,11 @@
 //! traps; emojis / box-drawing characters are intentionally absent.
 //!
 //! Compatibility notes (vs. Toykit v2 / RMK / embedded-graphics 0.8.x):
-//!   * `RenderContext::battery` is a tuple struct `BatteryStatusEvent(u8)`,
-//!     so we read it as `ctx.battery.0` (NOT `ctx.battery.percent`).
+//!   * `RenderContext::battery` is a tuple struct `BatteryStatusEvent(pub BatteryStatus)`
+//!     where `BatteryStatus` is an enum with two variants:
+//!     - `Unavailable`                              -> show "--%"
+//!     - `Available { charge_state, level: Option<u8> }`
+//!     When level is `Some(p)`, treat `p` as the percent; otherwise treat as unknown.
 //!   * `ImageRaw::new` in 0.8.x takes only `(data, width)`; height is
 //!     inferred from `data.len() / width`.
 
@@ -49,6 +52,7 @@ use embedded_graphics::{
 };
 use heapless::String;
 use rmk::display::{DisplayRenderer, RenderContext};
+use rmk::types::battery::BatteryStatus;
 
 const FIRMWARE_VERSION: &str = "V3.33";
 
@@ -196,10 +200,13 @@ impl DisplayRenderer<BinaryColor> for BongoCatRenderer {
             .into_styled(stroke)
             .draw(display)
             .ok();
-        // Fill bar proportional to battery.percent.
-        // NOTE: BatteryStatusEvent is a tuple struct, so the field is `.0`
-        // (not `.percent`).
-        let pct = ctx.battery.0.min(100) as u32;
+        // Fill bar proportional to battery level (0..100). When the battery
+        // status is `Unavailable` or the level is `None`, fall back to 0 so
+        // the bar stays empty (we still draw the percent text below as "--").
+        let pct: u32 = match ctx.battery.0 {
+            BatteryStatus::Available { level: Some(l), .. } => (l as u32).min(100),
+            _ => 0,
+        };
         let fill_w = (pct * 16) / 100;
         if fill_w > 0 {
             Rectangle::new(Point::new(98, 2), Size::new(fill_w, 4))
@@ -207,9 +214,18 @@ impl DisplayRenderer<BinaryColor> for BongoCatRenderer {
                 .draw(display)
                 .ok();
         }
-        // Percentage text - placed just below the icon
+        // Percentage text - placed just below the icon. The inner
+        // `BatteryStatus` enum does not implement `core::fmt::Display`, so we
+        // format the percent ourselves (or "--" when unknown).
         let mut bat_str: String<8> = String::new();
-        write!(&mut bat_str, "{}%", ctx.battery.0).ok();
+        match ctx.battery.0 {
+            BatteryStatus::Available { level: Some(l), .. } => {
+                write!(&mut bat_str, "{}%", l.min(100)).ok();
+            }
+            _ => {
+                write!(&mut bat_str, "--%").ok();
+            }
+        }
         Text::new(&bat_str, Point::new(96, 22), style)
             .draw(display)
             .ok();
