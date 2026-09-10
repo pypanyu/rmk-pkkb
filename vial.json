@@ -42,6 +42,16 @@
             "name": "SWITCH",
             "title": "Switch default output mode between USB/BLE",
             "shortName": "Switch\nOutput"
+        },
+        {
+            "name": "CLR_SPLIT",
+            "title": "Clear the split peer bond (hold 5s)",
+            "shortName": "Clear\nSplit"
+        },
+        {
+            "name": "DONGLE",
+            "title": "Pair with the USB dongle (hold 5s to clear)",
+            "shortName": "Dongle"
         }
     ],
     "layouts": {

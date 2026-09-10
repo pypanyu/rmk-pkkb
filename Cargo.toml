@@ -1,0 +1,105 @@
+[package]
+name = "totem"
+version = "0.1.0"
+edition = "2024"
+description = "Totem split keyboard + BLE dongle firmware (RMK)"
+
+[dependencies]
+rmk = { version = "0.9", default-features = false, features = [
+    "defmt",
+    "storage",
+    "vial",
+    "watchdog",
+    "nrf52840_ble",
+    "split",       # 分体键盘（central/peripheral）
+    "dongle",      # dongle 支持：键盘侧获得独立绑定槽 + SwitchToDongle 键；
+                   # dongle 侧解锁 rmk::dongle 模块
+    "async_matrix",
+    "adafruit_bl", # Bootmagic/Bootloader 键真正跳进 Adafruit UF2 bootloader
+] }
+# ⚠️ 关键补丁：crates.io 上的 rmk 0.9.0 漏开了 trouble-host 的 central/scan feature。
+# trouble-host 0.8.0 里扫描到的广播包（LeAdvertisingReport）只有在开启 "scan"
+# feature 后才会分发给事件处理器——不显式加上，分体 central 扫描不到右半、
+# dongle 扫不到键盘（能编译、能连接已有绑定，但配对/扫描静默失效）。
+trouble-host = { version = "0.8", default-features = false, features = [
+    "central",
+    "scan",
+] }
+
+nrf-sdc = { version = "0.4.0", features = [
+    "defmt",
+    "peripheral",
+    "central",
+    "nrf52840",
+] }
+nrf-mpsl = { version = "0.4.0", features = [
+    "defmt",
+    "critical-section-impl",
+    "nrf52840",
+] }
+bt-hci = { version = "0.10", features = ["defmt"] }
+
+cortex-m = "0.7.7"
+cortex-m-rt = "0.7.5"
+embassy-time = { version = "0.5", features = [
+    "tick-hz-32_768",
+    "defmt",
+    "defmt-timestamp-uptime",
+] }
+embassy-nrf = { version = "0.11", features = [
+    "defmt",
+    "nrf52840",
+    "time-driver-rtc1",
+    "gpiote",
+    "unstable-pac",
+    "nfc-pins-as-gpio", # P0_09/P0_10 默认是 NFC 复用脚，矩阵用了它们必须开
+    "time",
+] }
+embassy-executor = { version = "0.10", features = [
+    "defmt",
+    "platform-cortex-m",
+    "executor-thread",
+] }
+defmt = "1"
+defmt-rtt = "1"
+panic-probe = { version = "1", features = ["print-defmt"] }
+static_cell = "2"
+
+[build-dependencies]
+xz2 = "0.1.7"
+json = "0.12"
+const-gen = "1.6"
+
+# ── 三个固件目标：烧到三块板上 ──
+[[bin]]
+name = "central"     # 左半（分体中央端）
+path = "src/central.rs"
+test = false
+bench = false
+
+[[bin]]
+name = "peripheral"  # 右半（分体外设端）
+path = "src/peripheral.rs"
+test = false
+bench = false
+
+[[bin]]
+name = "dongle"      # USB 接收器（第三块板）
+path = "src/dongle.rs"
+test = false
+bench = false
+
+[profile.dev]
+codegen-units = 1
+debug = true
+opt-level = 1
+overflow-checks = true
+lto = false
+panic = "unwind"
+
+[profile.release]
+codegen-units = 1
+debug = true
+opt-level = "z"
+overflow-checks = false
+lto = "fat"

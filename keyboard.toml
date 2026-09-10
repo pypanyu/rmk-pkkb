@@ -1,3 +1,11 @@
+# ─────────────────────────────────────────────────────────────
+# Totem — 分体键盘 + BLE dongle（RMK 0.9 / nRF52840）
+# 架构：左半 = split central，右半 = split peripheral（仅此一个）
+#       dongle = 第三块 nRF52840 板，独立固件（src/dongle.rs），
+#       不占用 [split] 配置，只与 central 通信
+# 配对键：User8 = SwitchToDongle（默认 3 个 BLE profile，N+5=8）
+# ─────────────────────────────────────────────────────────────
+
 [keyboard]
 name = "Totem"
 product_name = "Totem"
@@ -15,9 +23,11 @@ map = """
 (2,0) (2,1) (2,2) (2,3) (2,4) (2,5) (2,6) (2,7) (2,8) (2,9)
 (3,0)       (3,2) (3,3) (3,4) (3,5) (3,6) (3,7)       (3,9)
 """
+
 [keymap]
 layers = 8
 
+# Layer 0 — 基础层
 [[keymap.layer]]
 keys = """
 Q W E R T Y U I O P
@@ -25,57 +35,66 @@ A S D F G H J K L Enter
 Z X C V B N M Comma Dot Delete
 LCtrl LAlt LShift Space LT(2,Space) RAlt Left Right
 """
+
+# Layer 1 —（暂空，建议填成符号层）
 [[keymap.layer]]
 keys = """
 1 2 3 4 5 6 7 8 9 0
 _ _ _ _ _ _ _ _ _ _
 _ _ _ _ _ _ _ _ _ _
-_  _ _ _ _ _ _  _
-"""
-[[keymap.layer]]
-keys = """
-1 2 3 4 5 6 7 8 9 0
-_ _ _ _ _ _ _ _ _ _
-_ _ _ _ _ _ _ _ _ _
-_  _ _ _ _ _ _  _
-"""
-[[keymap.layer]]
-keys = """
-1 2 3 4 5 6 7 8 9 0
-_ _ _ _ _ _ _ _ _ _
-_ _ _ _ _ _ _ _ _ _
-_  _ _ _ _ _ _  _
-"""
-[[keymap.layer]]
-keys = """
-_ _ _ _ _ _ _ _ _ _
-_ _ _ _ _ _ _ _ _ _
-_ _ _ _ _ _ _ _ _ _
-_  _ _ _ _ _ _  _
-"""
-[[keymap.layer]]
-keys = """
-_ _ _ _ _ _ _ _ _ _
-_ _ _ _ _ _ _ _ _ _
-_ _ _ _ _ _ _ _ _ _
-_  _ _ _ _ _ _  _
-"""
-[[keymap.layer]]
-keys = """
-_ _ _ _ _ _ _ _ _ _
-_ _ _ _ _ _ _ _ _ _
-_ _ _ _ _ _ _ _ _ _
-_  _ _ _ _ _ _  _
-"""
-[[keymap.layer]]
-keys = """
-_ _ _ _ _ _ _ _ _ _
-_ _ _ _ _ _ _ _ _ _
-_ _ _ _ _ _ _ _ _ _
-_  _ _ _ _ _ _  _
+_ _ _ _ _ _ _ _ _
 """
 
+# Layer 2 — 按住 LT(2,Space) 进入：数字 + dongle 配对键
+# User8 = SwitchToDongle：按一下切换到 dongle 槽位并开始寻求配对，
+#                           长按 5 秒清除 dongle 绑定（换接收器时用）
+[[keymap.layer]]
+keys = """
+1 2 3 4 5 6 7 8 9 0
+_ _ _ _ _ _ _ _ _ _
+_ _ _ _ _ _ _ _ _ _
+_ _ _ User8 _ _ _ _
+"""
 
+[[keymap.layer]]
+keys = """
+1 2 3 4 5 6 7 8 9 0
+_ _ _ _ _ _ _ _ _ _
+_ _ _ _ _ _ _ _ _ _
+_ _ _ _ _ _ _ _ _
+"""
+
+[[keymap.layer]]
+keys = """
+_ _ _ _ _ _ _ _ _ _
+_ _ _ _ _ _ _ _ _ _
+_ _ _ _ _ _ _ _ _ _
+_ _ _ _ _ _ _ _ _
+"""
+
+[[keymap.layer]]
+keys = """
+_ _ _ _ _ _ _ _ _ _
+_ _ _ _ _ _ _ _ _ _
+_ _ _ _ _ _ _ _ _ _
+_ _ _ _ _ _ _ _ _
+"""
+
+[[keymap.layer]]
+keys = """
+_ _ _ _ _ _ _ _ _ _
+_ _ _ _ _ _ _ _ _ _
+_ _ _ _ _ _ _ _ _ _
+_ _ _ _ _ _ _ _ _
+"""
+
+[[keymap.layer]]
+keys = """
+_ _ _ _ _ _ _ _ _ _
+_ _ _ _ _ _ _ _ _ _
+_ _ _ _ _ _ _ _ _ _
+_ _ _ _ _ _ _ _ _
+"""
 
 [rmk]
 combo_max_num = 25
@@ -84,49 +103,54 @@ debounce_time = 5
 morse_max_num = 32
 max_patterns_per_key = 4
 macro_space_size = 1024
+# dongle 配对窗口时长（秒），默认 30，仅 dongle 构建生效：
+# dongle_pairing_window_secs = 30
 
 [host]
-insecure=true 
+insecure = true
+# 正式版建议改为 false 并设置解锁键组合（物理矩阵坐标）：
+# insecure = false
+# unlock_keys = [[0, 0], [0, 1]]
 
 [ble]
 enabled = true
 
+# 存储区：nRF BLE 芯片默认从 0x60000 开始；num_sectors 默认 2。
+# 如需更大 keymap/配置空间可加大扇区数：
+# [storage]
+# num_sectors = 8
+
 [split]
 connection = "ble"
 
+# ── 左半 = 中央端（col_offset 0）──
 [split.central]
 rows = 4
 cols = 5
 row_offset = 0
 col_offset = 0
+# nRF52840 的 BLE 地址由芯片出厂 ID(FICR)自动生成，写了会被忽略（RP2040/ESP32 才生效）
+# ble_addr = [0x18, 0xe2, 0x21, 0x80, 0xc0, 0xc7]
+# 若左半电池供电，可按实际分压电阻启用电池上报：
+# battery_adc_pin = "vddh"
 
 [split.central.matrix]
 bootmagic = [0, 0]
 matrix_type = "normal"
-col_pins = ["P0_04", "P0_05", "P1_15", "P1_16", "P1_13"]
-row_pins = ["P0_02", "P0_03", "P0_28", "P0_29"]
+col_pins = ["P1_15", "P1_13", "P1_11", "P0_10", "P0_09"]
+row_pins = ["P1_06", "P0_02", "P0_29", "P0_31"]
 
+# ── 右半 = 外设端（仅此一个，重复块已删除）──
 [[split.peripheral]]
 rows = 4
 cols = 5
 row_offset = 0
 col_offset = 5
+# ble_addr = [0x7e, 0xfe, 0x73, 0x9e, 0x66, 0xe3]
+# battery_adc_pin = "vddh"
 
 [split.peripheral.matrix]
 bootmagic = [0, 0]
 matrix_type = "normal"
-col_pins = ["P0_04", "P0_05", "P1_15", "P1_16", "P1_13"]
-row_pins = ["P0_02", "P0_03", "P0_28", "P0_29"]
-
-[[split.peripheral]]
-rows = 4
-cols = 5
-row_offset = 0
-col_offset = 5
-
-[split.peripheral.matrix]
-bootmagic = [0, 0]
-matrix_type = "normal"
-col_pins = ["P0_04", "P0_05", "P1_15", "P1_16", "P1_13"]
-row_pins = ["P0_02", "P0_03", "P0_28", "P0_29"]
-
+col_pins = ["P1_15", "P1_13", "P1_11", "P0_10", "P0_09"]
+row_pins = ["P1_06", "P0_02", "P0_29", "P0_31"]

@@ -1,0 +1,51 @@
+# 生成三个固件的 .hex 和 .uf2（UF2 用于 Adafruit nRF52 bootloader 拖拽烧录）
+# 用法：cargo make uf2 --release
+
+[tasks.install-llvm-tools]
+install_crate = { rustup_component_name = "llvm-tools" }
+
+[tasks.flip-link]
+install_crate = { crate_name = "flip-link", binary = "flip-link", test_arg = ["-h"] }
+
+# ── central（左半）──
+[tasks.objcopy-central]
+install_crate = { crate_name = "cargo-binutils", binary = "cargo", test_arg = ["objcopy", "--help"] }
+command = "cargo"
+args = ["objcopy", "--release", "--bin", "central", "--", "-O", "ihex", "totem-central.hex"]
+dependencies = ["install-llvm-tools", "flip-link"]
+
+[tasks.uf2-central]
+install_crate = { crate_name = "cargo-hex-to-uf2", binary = "cargo", test_arg = ["hex-to-uf2", "--help"] }
+command = "cargo"
+args = ["hex-to-uf2", "--input-path", "totem-central.hex", "--output-path", "totem-central.uf2", "--family", "nrf52840"]
+dependencies = ["objcopy-central"]
+
+# ── peripheral（右半）──
+[tasks.objcopy-peripheral]
+install_crate = { crate_name = "cargo-binutils", binary = "cargo", test_arg = ["objcopy", "--help"] }
+command = "cargo"
+args = ["objcopy", "--release", "--bin", "peripheral", "--", "-O", "ihex", "totem-peripheral.hex"]
+dependencies = ["install-llvm-tools", "flip-link"]
+
+[tasks.uf2-peripheral]
+install_crate = { crate_name = "cargo-hex-to-uf2", binary = "cargo", test_arg = ["hex-to-uf2", "--help"] }
+command = "cargo"
+args = ["hex-to-uf2", "--input-path", "totem-peripheral.hex", "--output-path", "totem-peripheral.uf2", "--family", "nrf52840"]
+dependencies = ["objcopy-peripheral"]
+
+# ── dongle（接收器）──
+[tasks.objcopy-dongle]
+install_crate = { crate_name = "cargo-binutils", binary = "cargo", test_arg = ["objcopy", "--help"] }
+command = "cargo"
+args = ["objcopy", "--release", "--bin", "dongle", "--", "-O", "ihex", "totem-dongle.hex"]
+dependencies = ["install-llvm-tools", "flip-link"]
+
+[tasks.uf2-dongle]
+install_crate = { crate_name = "cargo-hex-to-uf2", binary = "cargo", test_arg = ["hex-to-uf2", "--help"] }
+command = "cargo"
+args = ["hex-to-uf2", "--input-path", "totem-dongle.hex", "--output-path", "totem-dongle.uf2", "--family", "nrf52840"]
+dependencies = ["objcopy-dongle"]
+
+# ── 汇总 ──
+[tasks.uf2]
+dependencies = ["uf2-central", "uf2-peripheral", "uf2-dongle"]
