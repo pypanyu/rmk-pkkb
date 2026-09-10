@@ -16,6 +16,9 @@ on:
 
 env:
   RUST_MIN_STACK: "67108864"
+  # 双保险：即便 .cargo/config.toml 的 [env] 段被 cargo 忽略（不同版本对
+  # [env] 表格式支持不一致），shell 环境里也能让 rmk 宏读到 keyboard.toml 路径。
+  KEYBOARD_TOML_PATH: "keyboard.toml"
 
 jobs:
   build:
@@ -38,8 +41,12 @@ jobs:
       # 显式指定 --target 是双保险：即便 .cargo/config.toml 的 [build].target
       # 偶尔没生效，cargo 也会跑 ARM target，避免 nrf-mpsl-sys 的 build.rs
       # 在 x86_64 上 panic（"Unsupported target: x86_64-unknown-linux-gnu"）。
+      # --config 再补一次环境变量，避免依赖 [env] 段的隐式行为。
       - name: Build firmware (release) — central + peripheral + dongle
-        run: cargo build --release --target thumbv7em-none-eabihf
+        run: |
+          cargo build --release \
+            --target thumbv7em-none-eabihf \
+            --config 'env.KEYBOARD_TOML_PATH="keyboard.toml"'
 
       - name: Generate .uf2 / .hex for all three images
         run: cargo make uf2
