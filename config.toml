@@ -1,0 +1,15 @@
+# 放到仓库根目录的 .cargo/config.toml（新建文件，路径：.cargo/config.toml）
+# 没有 KEYBOARD_TOML_PATH 时 rmk_central/rmk_peripheral 宏会直接报错退出；
+# target 和 flip-link 也是 cargo build 必需的。
+[target.'cfg(all(target_arch = "arm", target_os = "none"))']
+runner = "probe-rs run --chip nRF52840_xxAA"
+# flip-link 溢出检查链接器
+linker = "flip-link"
+
+[build]
+target = "thumbv7em-none-eabihf"     # Cortex-M4F (nRF52840)
+
+[env]
+DEFMT_LOG = "info"
+# rmk 宏靠这个环境变量定位 keyboard.toml，缺了它编译必失败
+KEYBOARD_TOML_PATH = { value = "keyboard.toml", relative = true }

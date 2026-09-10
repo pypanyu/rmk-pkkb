@@ -1,3 +1,4 @@
+# 整体替换仓库根目录的 Cargo.toml
 [package]
 name = "totem"
 version = "0.1.0"
@@ -5,25 +6,21 @@ edition = "2024"
 description = "Totem split keyboard + BLE dongle firmware (RMK)"
 
 [dependencies]
-rmk = { version = "0.9", default-features = false, features = [
+# dongle 支持（rmk::dongle 模块、键盘侧独立绑定槽 + SwitchToDongle）
+# 只在 git main 上有，crates.io 的 0.9.0 没有，必须钉 rev。
+# rev = rmk main 2026-09-09（34d1a5e），已核对 dongle/UsbTransport/storage API 均存在。
+rmk = { git = "https://github.com/rmk-rs/rmk", rev = "34d1a5eedf8afd17128cf25ed839adab6475d404", default-features = false, features = [
     "defmt",
     "storage",
-    "vial",
+    "vial",        # Vial 透传：dongle 和键盘两侧都要开 vial，才能通过接收器配置
     "watchdog",
     "nrf52840_ble",
     "split",       # 分体键盘（central/peripheral）
-    "dongle",      # dongle 支持：键盘侧获得独立绑定槽 + SwitchToDongle 键；
-                   # dongle 侧解锁 rmk::dongle 模块
+    "dongle",      # 键盘侧获得独立绑定槽 + SwitchToDongle(User8)；dongle 侧解锁 rmk::dongle。
+                   # 该 feature 已自动启用 trouble-host 的 central/scan 等特性，
+                   # 不再需要手动加 trouble-host 依赖（那是 rmk 0.9.0 的坑，git main 已修）
     "async_matrix",
     "adafruit_bl", # Bootmagic/Bootloader 键真正跳进 Adafruit UF2 bootloader
-] }
-# ⚠️ 关键补丁：crates.io 上的 rmk 0.9.0 漏开了 trouble-host 的 central/scan feature。
-# trouble-host 0.8.0 里扫描到的广播包（LeAdvertisingReport）只有在开启 "scan"
-# feature 后才会分发给事件处理器——不显式加上，分体 central 扫描不到右半、
-# dongle 扫不到键盘（能编译、能连接已有绑定，但配对/扫描静默失效）。
-trouble-host = { version = "0.8", default-features = false, features = [
-    "central",
-    "scan",
 ] }
 
 nrf-sdc = { version = "0.4.0", features = [
@@ -49,10 +46,10 @@ embassy-time = { version = "0.5", features = [
 embassy-nrf = { version = "0.11", features = [
     "defmt",
     "nrf52840",
-    "time-driver-rtc1",
+    "time-driver-rtc1",   # MPSL 占用 RTC0/TIMER0，embassy 计时必须用 RTC1
     "gpiote",
     "unstable-pac",
-    "nfc-pins-as-gpio", # P0_09/P0_10 默认是 NFC 复用脚，矩阵用了它们必须开
+    "nfc-pins-as-gpio",   # P0_09/P0_10 默认是 NFC 复用脚，矩阵用了它们必须开
     "time",
 ] }
 embassy-executor = { version = "0.10", features = [
@@ -70,7 +67,7 @@ xz2 = "0.1.7"
 json = "0.12"
 const-gen = "1.6"
 
-# ── 三个固件目标：烧到三块板上 ──
+# ── 三个固件目标：烧到三块板上（每个只定义一次）──
 [[bin]]
 name = "central"     # 左半（分体中央端）
 path = "src/central.rs"
@@ -103,50 +100,3 @@ debug = true
 opt-level = "z"
 overflow-checks = false
 lto = "fat"
-
-
-[features]
-# 显式 feature：让 CI/ESP32 任务可以决定要不要编译 nRF 专用 bin
-nrf52840_ble = ["rmk/nrf52840_ble", "dep:nrf-sdc", "dep:nrf-mpsl", "dep:bt-hci", "dep:embassy-nrf"]
-
-rmk = { version = "0.9", default-features = false, features = [
-    "defmt", "storage", "vial", "watchdog",
-    "split", "dongle", "async_matrix", "adafruit_bl",
-] }
-# nrf-* 改为 optional，由 nrf52840_ble feature 统一开关
-nrf-sdc = { version = "0.4.0", optional = true, features = [
-    "defmt", "peripheral", "central", "nrf52840",
-] }
-nrf-mpsl = { version = "0.4.0", optional = true, features = [
-    "defmt", "critical-section-impl", "nrf52840",
-] }
-bt-hci = { version = "0.10", optional = true, features = ["defmt"] }
-embassy-nrf = { version = "0.11", optional = true, features = [
-    "defmt", "nrf52840", "time-driver-rtc1", "gpiote",
-    "unstable-pac", "nfc-pins-as-gpio", "time",
-] }
-trouble-host = { version = "0.8", default-features = false, features = [
-    "central", "scan",
-] }
-
-# dongle bin 强制要求 nrf52840_ble feature，ESP32 任务不带它就跳过
-[[bin]]
-name = "central"
-path = "src/central.rs"
-required-features = ["nrf52840_ble"]
-test = false
-bench = false
-
-[[bin]]
-name = "peripheral"
-path = "src/peripheral.rs"
-required-features = ["nrf52840_ble"]
-test = false
-bench = false
-
-[[bin]]
-name = "dongle"
-path = "src/dongle.rs"
-required-features = ["nrf52840_ble"]
-test = false
-bench = false
