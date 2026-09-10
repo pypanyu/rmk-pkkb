@@ -23,7 +23,7 @@
 //!   3. Pushing the source crate's `MonoFramebuffer` to RMK's `DrawTarget`
 //!      pixel-by-pixel. `MonoFramebuffer` is page-major-LSB-top (the SSD1306
 //!      native layout), which is incompatible with `embedded-graphics` 0.8's
-//!      `ImageRaw` (row-major, MSB-first within byte — see
+//!      `ImageRaw` (row-major, MSB-first within byte - see
 //!      `pub struct ImageRaw<'a, C, BO = BigEndian>`). We must decode each
 //!      `(x, y) -> bit` ourselves and ship it through `target.draw_iter`.
 //!
@@ -287,7 +287,7 @@ impl DisplayRenderer<BinaryColor> for BongoCatRenderer {
         // the topmost row. `embedded-graphics` 0.8's `ImageRaw` defaults to
         // `BO = BigEndian` (MSB-first within byte) and a row-major byte stream,
         // so feeding `MonoFramebuffer::bytes()` straight into `ImageRaw::new`
-        // produces an interleaved/horizontally-mirrored copy — i.e. garbage on
+        // produces an interleaved/horizontally-mirrored copy -- i.e. garbage on
         // the OLED. Instead, walk every pixel in display order, decode the bit
         // ourselves, and push the resulting `Pixel` iterator into `target`.
         // RMK's SSD1306 driver target is itself a page-major-LSB-top buffer,
@@ -313,13 +313,13 @@ impl DisplayRenderer<BinaryColor> for BongoCatRenderer {
                 );
                 idx += 1;
                 if idx == BATCH {
-                    let _ = target.draw_iter(&batch);
+                    let _ = target.draw_iter(batch.iter().copied());
                     idx = 0;
                 }
             }
         }
         if idx > 0 {
-            let _ = target.draw_iter(&batch[..idx]);
+            let _ = target.draw_iter(batch[..idx].iter().copied());
         }
     }
 }
