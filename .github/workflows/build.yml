@@ -1,13 +1,54 @@
-name: Build RMK firmware
+# 整体替换 .github/workflows/build.yml
+name: Build Totem firmware
+
+# 自建编译：直接 cargo build 仓库自己的代码，不走官方 rmk-rs/rmk 的
+# user_build.yml 可复用工作流。原因：
+# 1. 官方工作流用 rmkit 从 keyboard.toml 生成全新工程，只产出
+#    central/peripheral 两个固件，产不出 dongle；
+# 2. 官方链路用的是已发布的 rmk 0.9（不含 dongle feature），
+#    而本仓库 dongle 依赖 rmk git main 的 rmk::dongle 模块。
+# （参考：tkv2-dongle 分支用同样方式编译成功）
+#
+# 注意：首次构建需从源码编译 RMK 和整个 nRF BLE 栈，约 15-25 分钟；
+# 之后有 cargo 缓存就快了。
+
 on:
   workflow_dispatch:
   push:
     paths:
       - "**"
 
+env:
+  RUST_MIN_STACK: "67108864"
+
 jobs:
   build:
-    uses: rmk-rs/rmk/.github/workflows/user_build.yml@main
-    with:
-      keyboard_toml_path: "keyboard.toml"
-      vial_json_path: "vial.json"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@1.96.0
+        with:
+          targets: thumbv7em-none-eabihf
+          components: llvm-tools, rustfmt
+
+      - name: Install build tools (flip-link, cargo-make, objcopy, hex-to-uf2)
+        run: cargo install flip-link cargo-make cargo-binutils cargo-hex-to-uf2
+
+      - name: Cache cargo registry and target
+        uses: Swatinem/rust-cache@v2
+
+      - name: Build firmware (release) — central + peripheral + dongle
+        run: cargo build --release
+
+      - name: Generate .uf2 / .hex for all three images
+        run: cargo make uf2
+
+      - name: Upload firmware artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: totem-firmware
+          path: |
+            totem-*.uf2
+            totem-*.hex
