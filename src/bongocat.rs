@@ -20,10 +20,12 @@
 //!          link state
 //!   2. Letting the source crate perform state reduction + scene rendering
 //!      (including the bongocat animation cadence and dirty-page tracking).
-//!   3. Blitting the source crate's `MonoFramebuffer` straight onto RMK's
-//!      `DrawTarget` by wrapping its page-major LSB-top bytes in an
-//!      `embedded_graphics::ImageRaw` (which defaults to the same byte
-//!      order, so no per-pixel conversion is needed).
+//!   3. Pushing the source crate's `MonoFramebuffer` to RMK's `DrawTarget`
+//!      pixel-by-pixel. `MonoFramebuffer` is page-major-LSB-top (the SSD1306
+//!      native layout), which is incompatible with `embedded-graphics` 0.8's
+//!      `ImageRaw` (row-major, MSB-first within byte — see
+//!      `pub struct ImageRaw<'a, C, BO = BigEndian>`). We must decode each
+//!      `(x, y) -> bit` ourselves and ship it through `target.draw_iter`.
 //!
 //! The `BongoCatRenderer` name is kept verbatim so the existing
 //! `renderer = "toykit_dongle::BongoCatRenderer"` line in `keyboard.toml`
@@ -36,7 +38,7 @@
 //!     and only the `street-fighter` feature (so its own `rmk` is *not*
 //!     pulled in and there is no conflict with Toykit-v2's pinned
 //!     `rmk` rev).
-//!   * `embedded-graphics 0.8` — for `ImageRaw` / `Image`.
+//!   * `embedded-graphics 0.8` — for `Pixel<BinaryColor>` and `DrawTarget`.
 //!
 //! Switch animation back to the bongo-cat sprite by changing the feature
 //! in `Cargo.toml`:
@@ -55,9 +57,9 @@ use dongle_display::display::{
 };
 use dongle_display::{DongleDisplay, ModifierStyle};
 use embedded_graphics::{
-    image::{Image, ImageRaw},
     pixelcolor::BinaryColor,
     prelude::*,
+    Pixel,
 };
 use rmk::display::{DisplayRenderer, RenderContext};
 use rmk_types::battery::{BatteryStatus, ChargeState};
@@ -278,18 +280,46 @@ impl DisplayRenderer<BinaryColor> for BongoCatRenderer {
             return;
         }
 
-        // ---- 3. Blit the page-major LSB-top MonoFramebuffer onto RMK's DrawTarget ----
+        // ---- 3. Pixel-by-pixel blit MonoFramebuffer -> target ----
         //
-        // `MonoFramebuffer::bytes()` exposes the raw SSD1306 page-major
-        // layout: each page (`height/8` rows) is stored as `width` bytes,
-        // and within each byte bit `0` is the topmost row. That is exactly
-        // the byte order that `ImageRaw::new(data, width)` defaults to for
-        // `BinaryColor`, so we can hand the slice straight in and skip the
-        // 8 192-pixel `draw_iter` path.
+        // `MonoFramebuffer::bytes()` exposes the raw SSD1306 page-major-LSB-top
+        // layout: each page is `width` bytes, and within each byte bit `0` is
+        // the topmost row. `embedded-graphics` 0.8's `ImageRaw` defaults to
+        // `BO = BigEndian` (MSB-first within byte) and a row-major byte stream,
+        // so feeding `MonoFramebuffer::bytes()` straight into `ImageRaw::new`
+        // produces an interleaved/horizontally-mirrored copy — i.e. garbage on
+        // the OLED. Instead, walk every pixel in display order, decode the bit
+        // ourselves, and push the resulting `Pixel` iterator into `target`.
+        // RMK's SSD1306 driver target is itself a page-major-LSB-top buffer,
+        // so pixel-iter writes land on the same bytes SSD1306 will receive.
         let fb = display.framebuffer();
-        let raw: ImageRaw<'_, BinaryColor> =
-            ImageRaw::new(fb.bytes(), u32::from(fb.size().width));
-        let image: Image<'_, ImageRaw<'_, BinaryColor>> = Image::new(&raw, Point::zero());
-        let _ = image.draw(target);
+        let bytes = fb.bytes();
+        let w = fb.size().width as i32;
+        let h = fb.size().height as i32;
+
+        // Fixed-size batch, no heap. 256 pixels = ~2 KiB on stack; comfortably
+        // under nRF52840's main + process stack budget.
+        const BATCH: usize = 256;
+        let mut batch: [Pixel<BinaryColor>; BATCH] =
+            [Pixel(Point::zero(), BinaryColor::Off); BATCH];
+        let mut idx: usize = 0;
+        for y in 0..h {
+            for x in 0..w {
+                let on =
+                    bytes[((y / 8) * w + x) as usize] & (1u8 << (y % 8)) != 0;
+                batch[idx] = Pixel(
+                    Point::new(x, y),
+                    if on { BinaryColor::On } else { BinaryColor::Off },
+                );
+                idx += 1;
+                if idx == BATCH {
+                    let _ = target.draw_iter(&batch);
+                    idx = 0;
+                }
+            }
+        }
+        if idx > 0 {
+            let _ = target.draw_iter(&batch[..idx]);
+        }
     }
 }
