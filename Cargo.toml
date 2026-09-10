@@ -28,9 +28,38 @@ rmk = { git = "https://github.com/rmk-rs/rmk", rev = "f8da2742971d048e0080e57d69
     "ssd1306",
 ] }
 
+# Direct dep on rmk-types so we can match the `BatteryStatus` /
+# `ChargeState` / `BleState` enums when bridging `RenderContext` to
+# `DisplayEvent`. Pinned to the same commit as the `rmk` dep so cargo
+# resolves to a single revision; the `_ble` + `split` features mirror
+# what `rmk` enables transitively.
+rmk-types = { git = "https://github.com/rmk-rs/rmk", rev = "f8da2742971d048e0080e57d69d98f00a859e4e9", features = [
+    "_ble",
+    "split",
+] }
+
 # Custom renderer dependencies (embedded-graphics primitives + heapless strings).
 embedded-graphics = "0.8"
 heapless = "0.9"
+
+# Display rendering engine: ports the standalone dongle display stack from
+# hitsmaxft/rmk-dongle-display into Toykit-v2.
+#
+# We pin a single commit and only enable `street-fighter` so the source
+# crate pulls in its own embedded-graphics-core (0.4) but NOT its own `rmk`
+# (the `rmk-display` feature is intentionally off, otherwise it would
+# conflict with the Toykit-v2-pinned RMK rev). Animation is selected by
+# feature; the two features are mutually exclusive at compile time inside
+# the source crate:
+#   * `street-fighter` -> character punching animation (current choice)
+#   * `bongo-cat`      -> cat typing on bongo drums
+dongle-display = {
+    package = "rmk-dongle-display",
+    git = "https://github.com/hitsmaxft/rmk-dongle-display",
+    rev = "687cf0e026b74a1add66206c33d4a340d7ad10fb",
+    default-features = false,
+    features = ["street-fighter"],
+}
 
 # nRF52 BLE stack (same as the RMK nrf52840 split example).
 nrf-sdc = { git = "https://github.com/alexmoon/nrf-sdc", rev = "f54b6389ffa2750d4d3a4f5435660cb66b47e51a", features = [
