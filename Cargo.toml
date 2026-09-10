@@ -103,3 +103,50 @@ debug = true
 opt-level = "z"
 overflow-checks = false
 lto = "fat"
+
+
+[features]
+# 显式 feature：让 CI/ESP32 任务可以决定要不要编译 nRF 专用 bin
+nrf52840_ble = ["rmk/nrf52840_ble", "dep:nrf-sdc", "dep:nrf-mpsl", "dep:bt-hci", "dep:embassy-nrf"]
+
+rmk = { version = "0.9", default-features = false, features = [
+    "defmt", "storage", "vial", "watchdog",
+    "split", "dongle", "async_matrix", "adafruit_bl",
+] }
+# nrf-* 改为 optional，由 nrf52840_ble feature 统一开关
+nrf-sdc = { version = "0.4.0", optional = true, features = [
+    "defmt", "peripheral", "central", "nrf52840",
+] }
+nrf-mpsl = { version = "0.4.0", optional = true, features = [
+    "defmt", "critical-section-impl", "nrf52840",
+] }
+bt-hci = { version = "0.10", optional = true, features = ["defmt"] }
+embassy-nrf = { version = "0.11", optional = true, features = [
+    "defmt", "nrf52840", "time-driver-rtc1", "gpiote",
+    "unstable-pac", "nfc-pins-as-gpio", "time",
+] }
+trouble-host = { version = "0.8", default-features = false, features = [
+    "central", "scan",
+] }
+
+# dongle bin 强制要求 nrf52840_ble feature，ESP32 任务不带它就跳过
+[[bin]]
+name = "central"
+path = "src/central.rs"
+required-features = ["nrf52840_ble"]
+test = false
+bench = false
+
+[[bin]]
+name = "peripheral"
+path = "src/peripheral.rs"
+required-features = ["nrf52840_ble"]
+test = false
+bench = false
+
+[[bin]]
+name = "dongle"
+path = "src/dongle.rs"
+required-features = ["nrf52840_ble"]
+test = false
+bench = false
