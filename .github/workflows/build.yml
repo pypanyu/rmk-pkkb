@@ -1,16 +1,12 @@
 # 整体替换 .github/workflows/build.yml
-name: Build Totem firmware
-
-# 自建编译：直接 cargo build 仓库自己的代码，不走官方 rmk-rs/rmk 的
-# user_build.yml 可复用工作流。原因：
-# 1. 官方工作流用 rmkit 从 keyboard.toml 生成全新工程，只产出
-#    central/peripheral 两个固件，产不出 dongle；
-# 2. 官方链路用的是已发布的 rmk 0.9（不含 dongle feature），
-#    而本仓库 dongle 依赖 rmk git main 的 rmk::dongle 模块。
-# （参考：tkv2-dongle 分支用同样方式编译成功）
+# 与官方 rmkit 工作流的差异：不用 rmkit，直接 cargo build 仓库代码。
+# 原因：rmkit 安装的是已发布版 rmkit 0.1.0，其内置的 rmk-config 0.6.0
+# 解析不出 Totem 的 [split.central/peripheral] 和 rmk 0.9+/git main 的
+# 其他字段；同时官方工作流也不会编译 src/dongle.rs。
 #
-# 注意：首次构建需从源码编译 RMK 和整个 nRF BLE 栈，约 15-25 分钟；
-# 之后有 cargo 缓存就快了。
+# 第一次跑会从源码编译整个 RMK + nRF BLE 栈，约 15-25 分钟属正常。
+
+name: Build Totem RMK firmware (central + peripheral + dongle)
 
 on:
   workflow_dispatch:
@@ -39,8 +35,11 @@ jobs:
       - name: Cache cargo registry and target
         uses: Swatinem/rust-cache@v2
 
+      # 显式指定 --target 是双保险：即便 .cargo/config.toml 的 [build].target
+      # 偶尔没生效，cargo 也会跑 ARM target，避免 nrf-mpsl-sys 的 build.rs
+      # 在 x86_64 上 panic（"Unsupported target: x86_64-unknown-linux-gnu"）。
       - name: Build firmware (release) — central + peripheral + dongle
-        run: cargo build --release
+        run: cargo build --release --target thumbv7em-none-eabihf
 
       - name: Generate .uf2 / .hex for all three images
         run: cargo make uf2
@@ -50,5 +49,5 @@ jobs:
         with:
           name: totem-firmware
           path: |
-            totem-*.uf2
-            totem-*.hex
+            *.uf2
+            *.hex
