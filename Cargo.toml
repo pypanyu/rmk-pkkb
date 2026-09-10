@@ -1,4 +1,8 @@
 # 整体替换仓库根目录的 Cargo.toml
+# 关键修复：rmk 钉到 tkv2 已验证的 rev f8da274，并把 nrf-sdc / nrf-mpsl /
+# bt-hci 切到 alexmoon 的 nrf-sdc fork。这套 fork 修了 nrf-mpsl-sys v0.3.0
+# build.rs 在 x86_64 上 panic 的问题（build.rs 第 126 行写死"Unsupported
+# target: x86_64-unknown-linux-gnu"），是 dongle 路线的关键补丁层。
 [package]
 name = "totem"
 version = "0.1.0"
@@ -6,35 +10,37 @@ edition = "2024"
 description = "Totem split keyboard + BLE dongle firmware (RMK)"
 
 [dependencies]
-# dongle 支持（rmk::dongle 模块、键盘侧独立绑定槽 + SwitchToDongle）
-# 只在 git main 上有，crates.io 的 0.9.0 没有，必须钉 rev。
-# rev = rmk main 2026-09-09（34d1a5e），已核对 dongle/UsbTransport/storage API 均存在。
-rmk = { git = "https://github.com/rmk-rs/rmk", rev = "34d1a5eedf8afd17128cf25ed839adab6475d404", default-features = false, features = [
+# rmk git 钉 rev：f8da274 是 tkv2-dongle 已验证编译通过的版本，
+# 包含 dongle feature 和 rmk::dongle 模块（rmk main 的 dongle feature
+# 还有 trouble-host?/central + ?/scan，是 f8da274 的超集但本工程不需要）。
+rmk = { git = "https://github.com/rmk-rs/rmk", rev = "f8da2742971d048e0080e57d69d98f00a859e4e9", default-features = false, features = [
     "defmt",
     "storage",
     "vial",        # Vial 透传：dongle 和键盘两侧都要开 vial，才能通过接收器配置
     "watchdog",
     "nrf52840_ble",
     "split",       # 分体键盘（central/peripheral）
-    "dongle",      # 键盘侧获得独立绑定槽 + SwitchToDongle(User8)；dongle 侧解锁 rmk::dongle。
-                   # 该 feature 已自动启用 trouble-host 的 central/scan 等特性，
-                   # 不再需要手动加 trouble-host 依赖（那是 rmk 0.9.0 的坑，git main 已修）
+    "dongle",      # 键盘侧获得独立绑定槽 + SwitchToDongle(User8)；dongle 侧解锁 rmk::dongle
     "async_matrix",
-    "adafruit_bl", # Bootmagic/Bootloader 键真正跳进 Adafruit UF2 bootloader
+    "adafruit_bl", # Bootmagic 键真正跳进 Adafruit UF2 bootloader
 ] }
 
-nrf-sdc = { version = "0.4.0", features = [
+# ── Nordic BLE 栈（关键：必须来自 alexmoon 的 fork，crates.io 版本会
+#    在 nrf-mpsl-sys v0.3.0 的 build.rs 里 panic）──
+nrf-sdc = { git = "https://github.com/alexmoon/nrf-sdc", rev = "f54b6389ffa2750d4d3a4f5435660cb66b47e51a", features = [
     "defmt",
     "peripheral",
     "central",
     "nrf52840",
 ] }
-nrf-mpsl = { version = "0.4.0", features = [
+nrf-mpsl = { git = "https://github.com/alexmoon/nrf-sdc", rev = "f54b6389ffa2750d4d3a4f5435660cb66b47e51a", features = [
     "defmt",
     "critical-section-impl",
     "nrf52840",
 ] }
-bt-hci = { version = "0.10", features = ["defmt"] }
+# bt-hci 必须锁 0.9 系列，与 alexmoon fork 配套；rmk f8da274 默认拉 0.10
+# 会触发类型不兼容编译错误
+bt-hci = { version = "0.9", features = ["defmt"] }
 
 cortex-m = "0.7.7"
 cortex-m-rt = "0.7.5"
