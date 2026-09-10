@@ -219,6 +219,18 @@ impl DisplayRenderer<BinaryColor> for BongoCatRenderer {
         ctx: &RenderContext,
         target: &mut D,
     ) {
+        // ---- 0. Snapshot & advance the local tick BEFORE borrowing `inner` ----
+        //
+        // `ensure()` returns `Option<&mut DongleDisplay>` which is derived
+        // from `&mut self`; holding that borrow across any further access to
+        // `self.tick_ms` would trip E0503/E0506. Grabbing the tick first and
+        // pre-incrementing keeps the borrow of `inner` scoped to the rest of
+        // the function body. If `ensure()` fails we have simply advanced the
+        // animation clock by one frame — harmless, the next successful render
+        // continues from the new tick.
+        let now_ms = self.tick_ms;
+        self.tick_ms = self.tick_ms.wrapping_add(TICK_STEP_MS);
+
         let Some(display) = self.ensure() else {
             return;
         };
@@ -260,8 +272,8 @@ impl DisplayRenderer<BinaryColor> for BongoCatRenderer {
         }
 
         // ---- 2. State reduction + scene render inside the source crate ----
-        let now_ms = self.tick_ms;
-        self.tick_ms = self.tick_ms.wrapping_add(TICK_STEP_MS);
+        // `now_ms` was captured before `ensure()` so `display` can be used
+        // freely here without re-borrowing `self`.
         if display.render(now_ms).is_err() {
             return;
         }
