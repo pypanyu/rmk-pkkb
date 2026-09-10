@@ -15,6 +15,17 @@ path = "src/lib.rs"
 [dependencies]
 # NOTE: the `display` + `ssd1306` features enable the OLED; they require a
 # recent RMK (>= 0.8, or `main`). Pin to a tag/rev that has them if needed.
+#
+# `nrf52840_ble` and `split` are RMK features that *transitively* enable
+# `rmk-types/_ble` and `rmk-types/split` (and therefore expose the
+# `RenderContext::ble_status` / `peripherals_connected` / `peripheral_batteries`
+# fields that `bongocat.rs` reads). We mirror them as named feature stubs on
+# *this* crate so the `#[cfg(feature = "_ble")]` / `#[cfg(feature = "split")]`
+# gates inside `bongocat.rs` actually compile under the same condition that
+# RMK uses to surface those fields — without this, `cargo check` would
+# report "unexpected cfg condition value" warnings and `BleState` would be
+# reported as unused (because the gated `transport_from_ctx` block would
+# always be dead).
 rmk = { git = "https://github.com/rmk-rs/rmk", rev = "f8da2742971d048e0080e57d69d98f00a859e4e9", default-features = false, features = [
     "defmt",
     "storage",
@@ -27,6 +38,14 @@ rmk = { git = "https://github.com/rmk-rs/rmk", rev = "f8da2742971d048e0080e57d69
     "display",
     "ssd1306",
 ] }
+# Mirror RMK's `_ble` / `split` feature names as empty stubs so the
+# `#[cfg(feature = "_ble")]` / `#[cfg(feature = "split")]` gates inside
+# `bongocat.rs` are valid cfg values. They are enabled by default because
+# this firmware only ever builds with `nrf52840_ble` + `split` on RMK
+# (which transitively pulls the same features into `rmk-types`, exposing
+# the corresponding `RenderContext` fields). If you build this crate with
+# `--no-default-features`, the renderer silently falls back to the USB
+# + Connected transport pill via the `cfg(not(...))` branches.
 
 # Direct dep on rmk-types so we can match the `BatteryStatus` /
 # `ChargeState` / `BleState` enums when bridging `RenderContext` to
@@ -96,6 +115,14 @@ defmt = "1"
 defmt-rtt = "1"
 panic-probe = { version = "1", features = ["print-defmt"] }
 static_cell = "2"
+
+# `_ble` / `split` are mirror stubs of RMK's feature names (see top-of-file
+# comment on `rmk`). They make `#[cfg(feature = "_ble")]` /
+# `#[cfg(feature = "split")]` valid inside this crate.
+[features]
+default = ["_ble", "split"]
+_ble = []
+split = []
 
 [build-dependencies]
 xz2 = "0.1.7"
