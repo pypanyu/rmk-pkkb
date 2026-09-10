@@ -44,10 +44,16 @@
 
 #![allow(dead_code)]
 
-use dongle_display::{
-    BatterySource, DisplayEvent, DongleDisplay, LinkState, ModifierStyle, OutputKind,
-    Size as DSize,
+// `rmk-dongle-display` re-exports its public surface from two places:
+//   - crate root: `DongleDisplay`, `RenderResult`, `MonoFramebuffer`,
+//     `FramebufferError`, `ModifierStyle`, animation handles.
+//   - `display` submodule: every semantic type (`BatterySource`,
+//     `DisplayEvent`, `LinkState`, `OutputKind`, `Size`, `DisplayState`,
+//     `StateDiff`, etc.) is reached via `dongle_display::display::*`.
+use dongle_display::display::{
+    BatterySource, DisplayEvent, LinkState, OutputKind, Size as DSize,
 };
+use dongle_display::{DongleDisplay, ModifierStyle};
 use embedded_graphics::{
     image::{Image, ImageRaw},
     pixelcolor::BinaryColor,
