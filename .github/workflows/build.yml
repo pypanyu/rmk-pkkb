@@ -1,56 +1,35 @@
-# 整体替换 .github/workflows/build.yml
-# 与官方 rmkit 工作流的差异：不用 rmkit，直接 cargo build 仓库代码。
-# 原因：rmkit 安装的是已发布版 rmkit 0.1.0，其内置的 rmk-config 0.6.0
-# 解析不出 Totem 的 [split.central/peripheral] 和 rmk 0.9+/git main 的
-# 其他字段；同时官方工作流也不会编译 src/dongle.rs。
-#
-# 第一次跑会从源码编译整个 RMK + nRF BLE 栈，约 15-25 分钟属正常。
-
+# Build Totem RMK firmware (central + peripheral + dongle)
 name: Build Totem RMK firmware (central + peripheral + dongle)
-
 on:
   workflow_dispatch:
   push:
     paths:
       - "**"
-
 env:
   RUST_MIN_STACK: "67108864"
-  # 双保险：即便 .cargo/config.toml 的 [env] 段被 cargo 忽略（不同版本对
-  # [env] 表格式支持不一致），shell 环境里也能让 rmk 宏读到 keyboard.toml 路径。
-  KEYBOARD_TOML_PATH: "keyboard.toml"
-
+  # 使用GITHUB_WORKSPACE绝对路径，rmk-types build.rs可以正确定位keyboard.toml
+  KEYBOARD_TOML_PATH: "${GITHUB_WORKSPACE}/keyboard.toml"
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@1.96.0
         with:
           targets: thumbv7em-none-eabihf
           components: llvm-tools, rustfmt
-
       - name: Install build tools (flip-link, cargo-make, objcopy, hex-to-uf2)
         run: cargo install flip-link cargo-make cargo-binutils cargo-hex-to-uf2
-
       - name: Cache cargo registry and target
         uses: Swatinem/rust-cache@v2
-
-      # 显式指定 --target 是双保险：即便 .cargo/config.toml 的 [build].target
-      # 偶尔没生效，cargo 也会跑 ARM target，避免 nrf-mpsl-sys 的 build.rs
-      # 在 x86_64 上 panic（"Unsupported target: x86_64-unknown-linux-gnu"）。
-      # --config 再补一次环境变量，避免依赖 [env] 段的隐式行为。
       - name: Build firmware (release) — central + peripheral + dongle
         run: |
           cargo build --release \
             --target thumbv7em-none-eabihf \
-            --config 'env.KEYBOARD_TOML_PATH="keyboard.toml"'
-
+            --config "env.KEYBOARD_TOML_PATH=\"${GITHUB_WORKSPACE}/keyboard.toml\""
       - name: Generate .uf2 / .hex for all three images
         run: cargo make uf2
-
       - name: Upload firmware artifacts
         uses: actions/upload-artifact@v7
         with:
