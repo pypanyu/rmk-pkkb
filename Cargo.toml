@@ -86,12 +86,6 @@ path = "src/peripheral.rs"
 test = false
 bench = false
 
-[[bin]]
-name = "dongle"      # USB 接收器（第三块板）
-path = "src/dongle.rs"
-test = false
-bench = false
-
 [profile.dev]
 codegen-units = 1
 debug = true
