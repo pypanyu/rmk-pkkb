@@ -1,39 +1,13 @@
-# Build Totem RMK firmware (central + peripheral + dongle)
-name: Build Totem RMK firmware (central + peripheral + dongle)
+name: Build RMK firmware
 on:
   workflow_dispatch:
   push:
     paths:
       - "**"
-env:
-  RUST_MIN_STACK: "67108864"
-  # 使用GITHUB_WORKSPACE绝对路径，rmk-types build.rs可以正确定位keyboard.toml
-  KEYBOARD_TOML_PATH: "${GITHUB_WORKSPACE}/keyboard.toml"
+
 jobs:
   build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-      - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@1.96.0
-        with:
-          targets: thumbv7em-none-eabihf
-          components: llvm-tools, rustfmt
-      - name: Install build tools (flip-link, cargo-make, objcopy, hex-to-uf2)
-        run: cargo install flip-link cargo-make cargo-binutils cargo-hex-to-uf2
-      - name: Cache cargo registry and target
-        uses: Swatinem/rust-cache@v2
-      - name: Build firmware (release) — central + peripheral + dongle
-        run: |
-          cargo build --release \
-            --target thumbv7em-none-eabihf \
-            --config "env.KEYBOARD_TOML_PATH=\"${GITHUB_WORKSPACE}/keyboard.toml\""
-      - name: Generate .uf2 / .hex for all three images
-        run: cargo make uf2
-      - name: Upload firmware artifacts
-        uses: actions/upload-artifact@v7
-        with:
-          name: totem-firmware
-          path: |
-            *.uf2
-            *.hex
+    uses: rmk-rs/rmk/.github/workflows/user_build.yml@main
+    with:
+      keyboard_toml_path: "keyboard.toml"
+      vial_json_path: "vial.json"
