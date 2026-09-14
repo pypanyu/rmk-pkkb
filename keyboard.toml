@@ -1,3 +1,8 @@
+# ============================================================================
+# RMK 键盘固件配置 - pkkb velvet (Updated 2026)
+# ============================================================================
+
+# [1] 键盘基础信息
 [keyboard]
 name = "velvet"
 product_name = "velvet"
@@ -6,30 +11,85 @@ product_id = 0x4643
 manufacturer = "pkk"
 chip = "rp2040"
 
-[keymap]
+# [2] 矩阵配置（用于非分割键盘时）
+# 注意：当启用 [split] 时，此配置被忽略
+# [matrix]
+# matrix_type = "normal"
+# row2col = true
+# row_pins = ["PIN_2", "PIN_3", "PIN_4", "PIN_5"]
+# col_pins = ["PIN_9", "PIN_10", "PIN_11", "PIN_12", "PIN_13"]
 
-[keymap.layers.0]
+# [3] 布局定义（必需）
+[layout]
+rows = 4
+cols = 10          # 总列数：左5列 + 右5列 = 10列
+layers = 3         # 基础层 + 2个功能层
+
+# [4] 按键映射 - 层 0（基础层）
+[[layer]]
 name = "base_layer"
 keys = """
-Q     W      E      R      T            Y      U      I      O      P
-A     S      D      F      G            H      J      K      L      ENTER
-Z     X      C      V      B            N      M      COMMA  DOT    SLASH
-    LCTL    LALT   LSFT   MO(1)      SPACE   MO(2)   RALT   DEL
+    Q W E R T    Y U I O P
+    A S D F G    H J K L ENTER
+    Z X C V B    N M COMMA DOT SLASH
+    LCTL LALT LSFT MO(1) SPACE    MO(2) RALT DEL
 """
 
-[storage]
-# clear_storage = true
+# [5] 按键映射 - 层 1（功能层）
+[[layer]]
+name = "fn_layer_1"
+keys = """
+    F1 F2 F3 F4 F5    F6 F7 F8 F9 F10
+    1 2 3 4 5    6 7 8 9 0
+    GRAVE MINUS EQUAL LBRC RBRC    SEMICOLON QUOTE BACKSLASH SLASH BSPACE
+    TRNS TRNS TRNS TRNS TRNS    TRNS TRNS TRNS
+"""
 
+# [6] 按键映射 - 层 2（功能层）
+[[layer]]
+name = "fn_layer_2"
+keys = """
+    HOME PAGE_UP UP PAGE_DOWN DEL    INS HOME END DELETE BSPACE
+    LEFT DOWN RIGHT UP PGUP    PGDN LEFT DOWN RIGHT ENTER
+    UNDO CUT COPY PASTE REDO    TRNS TRNS TRNS TRNS TRNS
+    TRNS TRNS TRNS TRNS TRNS    TRNS TRNS TRNS
+"""
+
+# [7] 按键别名（可选）
+[aliases]
+# 可在此定义自定义别名
+# CUSTOM_KEY = "YOUR_KEYCODE"
+
+# [8] 行为配置
+[behavior]
+# Combo（按键组合）
+[[behavior.combos]]
+name = "combo_esc"
+keys = [0, 1]      # 位置索引
+key_action = "KC_ESC"
+timeout = 50       # 毫秒
+
+# Tap-Hold（快速按/长按）
+[[behavior.tap_hold_configs]]
+name = "shift_layer"
+key_code = "KC_LSHIFT"
+hold_key_action = "MO(1)"
+timeout = 200
+retro_tapping = false
+
+# [9] 分割键盘配置（核心配置）
 [split]
 connection = "serial"
+split_peripherals_num = 1
 
+# 中央控制器
 [split.central]
 rows = 4
 cols = 5
 row_offset = 0
 col_offset = 0
-serial = [{ instance = "UART0", tx_pin = "PIN_0", rx_pin = "PIN_1" }]
 
+# 矩阵定义
 [split.central.matrix]
 matrix_type = "normal"
 row2col = true
@@ -37,13 +97,21 @@ row_pins = ["PIN_2", "PIN_3", "PIN_4", "PIN_5"]
 col_pins = ["PIN_9", "PIN_10", "PIN_11", "PIN_12", "PIN_13"]
 bootmagic = [0, 0]
 
+# 串口通信配置
+[[split.central.serial]]
+instance = "UART0"
+tx_pin = "PIN_0"
+rx_pin = "PIN_1"
+baud_rate = 115200    # 官方推荐的波特率
+
+# 外设配置 #1
 [[split.peripheral]]
 rows = 4
 cols = 5
 row_offset = 0
 col_offset = 5
-serial = [{ instance = "UART0", tx_pin = "PIN_0", rx_pin = "PIN_1" }]
 
+# 外设矩阵定义
 [split.peripheral.matrix]
 matrix_type = "normal"
 row2col = true
@@ -51,6 +119,23 @@ row_pins = ["PIN_2", "PIN_3", "PIN_4", "PIN_5"]
 col_pins = ["PIN_9", "PIN_10", "PIN_11", "PIN_12", "PIN_13"]
 bootmagic = [0, 0]
 
+# 外设串口通信
+[[split.peripheral.serial]]
+instance = "UART0"
+tx_pin = "PIN_0"
+rx_pin = "PIN_1"
+baud_rate = 115200
+
+# [10] 存储配置
+[storage]
+# clear_storage = false    # 保留设置为注释，不要在编译时清除存储
+
+# [11] 主机工具配置（Vial 支持）
+[host]
+# insecure = true         # 生产环境建议改为 false
+# unlock_keys = ["MO(2)", "LSHIFT"]
+
+# [12] RMK 内部配置
 [rmk]
 split_peripherals_num = 1
 combo_max_num = 25
@@ -59,5 +144,37 @@ debounce_time = 15
 morse_max_num = 32
 max_patterns_per_key = 4
 
-[host]
-insecure = true
+# [13] 事件配置（可选）
+[event]
+# 根据需要调整事件队列大小
+# matrix_event_channel_size = 128
+# keyboard_event_channel_size = 256
+
+# [14] 照明配置（可选，如需要 LED 指示）
+# [light]
+# num_lock_pin = "PIN_14"
+# caps_lock_pin = "PIN_15"
+# scroll_lock_pin = "PIN_16"
+
+# 配置说明：
+# ============================================================================
+# 1. 分割键盘架构：
+#    - central: 主控制器（处理输入、蓝牙等）
+#    - peripheral: 从设备（仅扫描矩阵并通过串口发送）
+#
+# 2. 串口通信：
+#    - 推荐波特率：115200 bps（官方标准）
+#    - TX/RX 引脚需与 PCB 设计对应
+#
+# 3. 按键映射：
+#    - 支持最多 3 层（layers = 3）
+#    - MO(1)：按住时切换到第1层
+#    - MO(2)：按住时切换到第2层
+#    - TRNS：透传至下层
+#
+# 4. 性能参数：
+#    - debounce_time: 消抖延迟（15ms 标准）
+#    - combo_max_num: 最大组合键数（25 个）
+#    - combo_max_length: 组合键最大长度（4 个键）
+#
+# ============================================================================
