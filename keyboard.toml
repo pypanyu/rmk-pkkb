@@ -6,11 +6,11 @@
 
 # ============================================================================
 
-\[keyboard]
+[keyboard]
 name = "velvet"
-product\_name = "velvet"
-vendor\_id = 0x4c4b
-product\_id = 0x4643
+product_name = "velvet"
+vendor_id = 0x4c4b
+product_id = 0x4643
 manufacturer = "pkk"
 chip = "rp2040"
 
@@ -20,15 +20,15 @@ chip = "rp2040"
 
 # ============================================================================
 
-# \[matrix]
+#[matrix]
 
-# matrix\_type = "normal"
+# matrixtype = "normal"
 
 # row2col = true
 
-# row\_pins = \["PIN\_2", "PIN\_3", "PIN\_4", "PIN\_5"]
+# row_pins = ["PIN_2", "PIN_3", "PIN_4", "PIN_5"]
 
-# col\_pins = \["PIN\_9", "PIN\_10", "PIN\_11", "PIN\_12", "PIN\_13"]
+# col_pins = ["PIN_9", "PIN_10", "PIN_11", "PIN_12", "PIN_13"]
 
 # ============================================================================
 
@@ -36,7 +36,7 @@ chip = "rp2040"
 
 # ============================================================================
 
-\[layout]
+[layout]
 rows = 4
 cols = 10  # 左5列 + 右5列
 
@@ -59,13 +59,13 @@ map = """
 
 # ============================================================================
 
-\[keymap]
+[keymap]
 layers = 3  # 总共 3 层
 
 # 第 0 层 - 基础层
 
-\[\[keymap.layer]]
-name = "base\_layer"
+[[keymap.layer]]
+name = "base_layer"
 keys = """
 Q W E R T    Y U I O P
 A S D F G    H J K L Enter
@@ -75,8 +75,8 @@ LCtrl LShift    Space RShift
 
 # 第 1 层 - 功能层 1
 
-\[\[keymap.layer]]
-name = "fn\_layer\_1"
+[[keymap.layer]]
+name = "fn_layer_1"
 keys = """
 F1 F2 F3 F4 F5    F6 F7 F8 F9 F10
 1 2 3 4 5    6 7 8 9 0
@@ -86,8 +86,8 @@ Trns Trns    Trns Trns
 
 # 第 2 层 - 功能层 2（鼠标/导航层）
 
-\[\[keymap.layer]]
-name = "fn\_layer\_2"
+[[keymap.layer]]
+name = "fn_layer_2"
 keys = """
 Home PageUp Up PageDown Delete    Insert Home End Delete Backspace
 Left Down Right Up PgUp    PgDn Left Down Right Enter
@@ -101,7 +101,7 @@ Trns Trns    Trns Trns
 
 # ============================================================================
 
-\[aliases]
+[aliases]
 
 # MO(1) = "MO(1)"  # Momentary Layer 1
 
@@ -113,59 +113,59 @@ Trns Trns    Trns Trns
 
 # ============================================================================
 
-\[split]
+[split]
 connection = "serial"
-split\_peripherals\_num = 1  # 1 个外设（右半边）
+split_peripherals_num = 1  # 1 个外设（右半边）
 
 # 中央控制器（左半边）
 
-\[split.central]
+[split.central]
 rows = 4
 cols = 5
-row\_offset = 0
-col\_offset = 0
+row_offset = 0
+col_offset = 0
 
 # 中央控制器的矩阵定义
 
-\[split.central.matrix]
-matrix\_type = "normal"
+[split.central.matrix]
+matrix_type = "normal"
 row2col = true
-row\_pins = \["PIN\_2", "PIN\_3", "PIN\_4", "PIN\_5"]
-col\_pins = \["PIN\_9", "PIN\_10", "PIN\_11", "PIN\_12", "PIN\_13"]
-bootmagic = \[0, 0]
+row_pins = ["PIN_2", "PIN_3", "PIN_4", "PIN_5"]
+col_pins = ["PIN_9", "PIN_10", "PIN_11", "PIN_12", "PIN_13"]
+bootmagic = [0, 0]
 
 # 中央控制器的串口配置
 
-\[\[split.central.serial]]
+[[split.central.serial]]
 instance = "UART0"
-tx\_pin = "PIN\_0"
-rx\_pin = "PIN\_1"
-baud\_rate = 115200
+tx_pin = "PIN_0"
+rx_pin = "PIN_1"
+baud_rate = 115200
 
 # 外设配置（右半边）
 
-\[\[split.peripheral]]
+[[split.peripheral]]
 rows = 4
 cols = 5
-row\_offset = 0
-col\_offset = 5  # 列偏移为 5（因为左半边占 0-4 列）
+row_offset = 0
+col_offset = 5  # 列偏移为 5（因为左半边占 0-4 列）
 
 # 外设的矩阵定义
 
-\[split.peripheral.matrix]
-matrix\_type = "normal"
+[split.peripheral.matrix]
+matrix_type = "normal"
 row2col = true
-row\_pins = \["PIN\_2", "PIN\_3", "PIN\_4", "PIN\_5"]
-col\_pins = \["PIN\_9", "PIN\_10", "PIN\_11", "PIN\_12", "PIN\_13"]
-bootmagic = \[0, 0]
+row_pins = ["PIN_2", "PIN_3", "PIN_4", "PIN_5"]
+col_pins = ["PIN_9", "PIN_10", "PIN_11", "PIN_12", "PIN_13"]
+bootmagic = [0, 0]
 
 # 外设的串口配置
 
-\[\[split.peripheral.serial]]
+[[split.peripheral.serial]]
 instance = "UART0"
-tx\_pin = "PIN\_0"
-rx\_pin = "PIN\_1"
-baud\_rate = 115200
+tx_pin = "PIN_0"
+rx_pin = "PIN_1"
+baud_rate = 115200
 
 # ============================================================================
 
@@ -173,7 +173,7 @@ baud\_rate = 115200
 
 # ============================================================================
 
-\[storage]
+[storage]
 
 # enabled = true  # 默认启用，可在此配置
 
@@ -185,7 +185,7 @@ baud\_rate = 115200
 
 # ============================================================================
 
-\[behavior]
+[behavior]
 
 # 可在此添加 combo、tap-hold 等配置
 
@@ -197,7 +197,7 @@ baud\_rate = 115200
 
 # ============================================================================
 
-\[host]
+[host]
 
 # 启用 Vial 支持
 
@@ -211,13 +211,13 @@ baud\_rate = 115200
 
 # ============================================================================
 
-\[rmk]
-split\_peripherals\_num = 1
-combo\_max\_num = 25
-combo\_max\_length = 4
-debounce\_time = 15  # 单位：毫秒
-morse\_max\_num = 32
-max\_patterns\_per\_key = 4
+[rmk]
+split_peripherals_num = 1
+combo_max_num = 25
+combo_max_length = 4
+debounce_time = 15  # 单位：毫秒
+morse_max_num = 32
+max_patterns_per_key = 4
 
 # ============================================================================
 
@@ -225,7 +225,7 @@ max\_patterns\_per\_key = 4
 
 # ============================================================================
 
-\[event]
+[event]
 
 # matrix\_event\_channel\_size = 128
 
