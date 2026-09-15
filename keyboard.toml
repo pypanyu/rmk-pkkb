@@ -26,7 +26,7 @@ layers = 8
 keys = """
 Q W E R T    Y U I O P
 A S D F G    H J K L Enter
-Z X C V B    N M Comma Period Slash
+Z X C V B    N M Comma DOT Slash
 _ LCtrl LAlt LShift MO(1) Space MO(2) RShift DEL _
 """
 
