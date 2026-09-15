@@ -35,7 +35,7 @@ _ LCtrl LAlt LShift MO(1) Space MO(2) RShift DEL _
 [[keymap.layer]] # layer 1
 keys = """
 1 2 3 4 5    6 7 8 9 0
-A(kc1) A(kc3) _ _ MINS EQL _ _ _ _ PENT
+_ _ _ _ MINS EQL _ _ _ _ PENT
 _ _ _  _ _  _ _  _ _ _ 
 _ _ _  _ _  _ _  _ _ _ 
 """
