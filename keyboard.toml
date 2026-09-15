@@ -91,8 +91,8 @@ _ _ _  _ _  _ _  _ _ _
 connection = "serial"
 
 [split.central]
-rows = 2
-cols = 2
+rows = 4
+cols = 5
 row_offset = 0
 col_offset = 0
 serial = [
