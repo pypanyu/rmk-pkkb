@@ -28,7 +28,7 @@ layers = 8
 keys = """
 7 8 9 Q W E R T Y U I O P
 4 5 6 A S D F G H J K L Enter
-1 2 3 Z X C V B N M Comma Dot Delete
+1 2 3 Z X C V B N M Comma Dot SLSH
 _ _ 0 _ _ LShift Space _ LT(2, Space) _ Delete _ _
 """
 
