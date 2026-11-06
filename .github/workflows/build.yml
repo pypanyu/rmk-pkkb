@@ -1,13 +1,130 @@
 name: Build RMK firmware
+
+# Builds the firmware straight from keyboard.toml + vial.json.
+#
+# This used to call rmk-rs's reusable workflow (user_build.yml@main). The build
+# kept failing on GitHub-hosted runners while the exact same keyboard.toml
+# compiled fine locally:
+#
+#   error: failed to run custom build command for `nrf-mpsl-sys v0.3.0`
+#   ./third_party/arm/CMSIS_5/CMSIS/Core/Include/cmsis_gcc.h:74:45:
+#       error: unknown type name 'uint32_t'
+#   thread 'main' panicked at nrf-mpsl-sys-0.3.0/build.rs:237:10:
+#       Unable to generate bindings: ClangDiagnostic(...)
+#
+# nrf-mpsl-sys generates its bindings with bindgen at build time. The runner
+# ships libclang but not clang's builtin C headers (stdint.h / stdbool.h), so
+# cmsis_gcc.h cannot resolve uint32_t. The reusable workflow offers no way to
+# inject an extra setup step, so the steps are spelled out here and the clang
+# headers are put on bindgen's include path explicitly.
+
 on:
   workflow_dispatch:
   push:
     paths:
       - "**"
 
+env:
+  RUST_MIN_STACK: "67108864"
+  RUST_TOOLCHAIN: "1.96.0"
+  CHIP: "nrf52840"
+
 jobs:
   build:
-    uses: rmk-rs/rmk/.github/workflows/user_build.yml@main
-    with:
-      keyboard_toml_path: "keyboard.toml"
-      vial_json_path: "vial.json"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: dtolnay/rust-toolchain@1.96.0
+
+      - uses: cargo-bins/cargo-binstall@main
+
+      - name: Install rmkit, flip-link and cargo-make
+        run: cargo binstall cargo-make rmkit flip-link -y
+
+      - name: Install ARM GCC (nRF) and clang
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-arm-none-eabi clang libclang-dev
+
+      - name: Point bindgen at libclang and clang's C headers
+        run: |
+          set -euo pipefail
+          LIBCLANG_SO="$(find /usr/lib /usr/local/lib -maxdepth 6 -name 'libclang.so*' 2>/dev/null | head -n1)"
+          if [ -z "$LIBCLANG_SO" ]; then
+            echo "::error::libclang not found; bindgen cannot run"
+            exit 1
+          fi
+          echo "LIBCLANG_PATH=$(dirname "$(readlink -f "$LIBCLANG_SO")")" >> "$GITHUB_ENV"
+
+          # clang's builtin headers (stdint.h, stdbool.h, ...) live in the
+          # resource dir. They are what cmsis_gcc.h / mpsl.h need.
+          CLANG_INCLUDE="$(clang -print-resource-dir)/include"
+          if [ ! -f "$CLANG_INCLUDE/stdint.h" ]; then
+            echo "::error::clang builtin headers missing at $CLANG_INCLUDE"
+            exit 1
+          fi
+          echo "BINDGEN_EXTRA_CLANG_ARGS=-I$CLANG_INCLUDE" >> "$GITHUB_ENV"
+          echo "bindgen include: $CLANG_INCLUDE"
+
+      - name: Create firmware project
+        run: |
+          rmkit create \
+            --keyboard-toml-path keyboard.toml \
+            --vial-json-path vial.json \
+            --version main \
+            --target-dir rmk
+
+      - name: Pin generated Rust toolchain
+        working-directory: ./rmk
+        run: |
+          if [ -f rust-toolchain.toml ]; then
+            sed -i "s/^channel = .*/channel = \"$RUST_TOOLCHAIN\"/" rust-toolchain.toml
+            rustup toolchain install
+          else
+            rustup toolchain install "$RUST_TOOLCHAIN"
+          fi
+
+      - name: Cache cargo registry and target
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: "rmk -> target"
+          key: ${{ env.CHIP }}
+
+      - name: Build firmware
+        working-directory: ./rmk
+        run: |
+          cargo build --release
+          cargo make uf2 --release
+
+      - name: Upload uf2 artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: velvet-firmware_uf2
+          path: rmk/*.uf2
+
+      - name: Upload hex artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: velvet-firmware_hex
+          path: rmk/*.hex
+
+      - name: Stage ELF
+        working-directory: ./rmk
+        run: |
+          for f in target/*/release/*; do
+            if [ -f "$f" ] && [ -x "$f" ]; then
+              bin=$(basename "$f")
+              case "$bin" in
+                central|peripheral) name="velvet-${bin}" ;;
+                *)                  name="$bin" ;;
+              esac
+              cp "$f" "${name}.elf"
+            fi
+          done
+
+      - name: Upload elf artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: velvet-firmware_elf
+          path: rmk/*.elf
