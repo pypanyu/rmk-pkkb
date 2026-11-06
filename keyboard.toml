@@ -20,9 +20,7 @@ map = """
 [keymap]
 layers = 8
 
-# 第 0 层 - 基础层
-
-[[keymap.layer]] # layer 0
+[[keymap.layer]] 
 keys = """
 Q W E R T    Y U I O P
 A S D F G    H J K L Enter
@@ -30,17 +28,13 @@ Z X C V B    N M Comma DOT Slash
 _ LCtrl LAlt LShift MO(1) Space MO(2) RShift DEL _
 """
 
-# 第 1 层 - 功能层 1
-
-[[keymap.layer]] # layer 1
+[[keymap.layer]]
 keys = """
 1 2 3 4 5    6 7 8 9 0
 _ _ _ _ MINS EQL _ _ _  PENT
 _ _ _  _ _  _ _  _ _ _ 
 _ _ _  _ _  _ _  _ _ _ 
 """
-
-# 第 2 层 - 功能层 2（鼠标/导航层）
 
 [[keymap.layer]] 
 keys = """
