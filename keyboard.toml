@@ -5,7 +5,7 @@ product_name = "velvet"
 vendor_id = 0x4c4b
 product_id = 0x4643
 manufacturer = "pkkb"
-chip = "rp2040"
+chip = "nrf52840"
 
 [layout]
 rows = 4
@@ -85,44 +85,34 @@ _ _ _  _ _  _ _  _ _ _
 _ _ _  _ _  _ _  _ _ _ 
 """
 
-[storage]
-
 [split]
-connection = "serial"
+connection = "ble"
 
 [split.central]
 rows = 4
 cols = 5
 row_offset = 0
 col_offset = 0
-serial = [
-    { instance = "UART0", tx_pin = "PIN_0", rx_pin = "PIN_1" },
-]
-
+ble_addr = [0x18, 0xe2, 0x21, 0x80, 0xc0, 0xc7]
 [split.central.matrix]
-matrix_type = "normal"
-row2col = true
-row_pins = ["PIN_2", "PIN_3", "PIN_4", "PIN_5"]
-col_pins = ["PIN_9", "PIN_10", "PIN_11", "PIN_12", "PIN_13"]
 bootmagic = [0, 0]
+matrix_type = "normal"
+col_pins = ["P0_17", "P0_20", "P0_22", "P0_24", "P1_00"]
+row_pins = ["P0_29", "P0_02", "P1_15", "P1_13"]
+row2col = true
 
 [[split.peripheral]]
 rows = 4
 cols = 5
 row_offset = 0
-col_offset = 5  # 列偏移为 5（因为左半边占 0-4 列）
-serial = [
-    { instance = "UART0", tx_pin = "PIN_0", rx_pin = "PIN_1" },
-]
-
-
+col_offset = 5
+ble_addr = [0x7e, 0xfe, 0x73, 0x9e, 0x66, 0xe3]
 [split.peripheral.matrix]
-matrix_type = "normal"
-row2col = true
-row_pins = ["PIN_2", "PIN_3", "PIN_4", "PIN_5"]
-col_pins = ["PIN_9", "PIN_10", "PIN_11", "PIN_12", "PIN_13"]
 bootmagic = [0, 0]
-
+matrix_type = "normal"
+col_pins = ["P0_17", "P0_20", "P0_22", "P0_24", "P1_00"]
+row_pins = ["P0_29", "P0_02", "P1_15", "P1_13"]
+row2col = true
 
 [rmk]
 # Maximum number of combos keyboard can store
@@ -140,5 +130,9 @@ max_patterns_per_key = 4
 # Enable or disable Vial support (default: true)
 vial_enabled = true
 insecure=true
+
+[ble]
+enabled = true
+battery_adc_pin = "vddh"
 
 
