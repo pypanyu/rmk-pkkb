@@ -9,6 +9,7 @@
     },
 
       "customKeycodes": [
+          
       {
           "name": "BT0",
           "title": "Bluetooth Channel 0",
@@ -44,6 +45,7 @@
           "title": "Switch default output mode between USB/BLE",
           "shortName": "Switch\nOutput"
       }
+          
   ],
     
     "layouts": {
