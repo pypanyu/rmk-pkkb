@@ -1,6 +1,6 @@
 [keyboard]
-name = "haori36rmk"
-product_name = "haori36rmk"
+name = "Viod40"
+product_name = "Viod40"
 vendor_id = 0x4c4b
 product_id = 0x4643
 manufacturer = "pkk"
@@ -8,36 +8,36 @@ chip = "rp2040"
 
 [matrix]
 # Row and col pins are mandatory
-row_pins = ["PIN_12", "PIN_13", "PIN_14", "PIN_15"]
-col_pins = ["PIN_2", "PIN_3", "PIN_4", "PIN_5", "PIN_6", "PIN_7", "PIN_8", "PIN_9", "PIN_10", "PIN_11"]
+row_pins = ["PIN_9", "PIN_10", "PIN_11", "PIN_12"]
+col_pins = ["PIN_0", "PIN_1", "PIN_2", "PIN_3", "PIN_4", "PIN_5", "PIN_29", "PIN_28", "PIN_27", "PIN_26", "PIN_15", "PIN_14", "PIN_13"]
 # RMK uses col2row as the default matrix diode direction, if you want to use a row2col matrix, add `row2col = true`
 
 [layout]
 rows = 4
-cols = 10
+cols = 13
 map = """
-(0,0) (0,1) (0,2) (0,3) (0,4) [1.5] (0,5) (0,6) (0,7) (0,8) (0,9)
-(1,0) (1,1) (1,2) (1,3) (1,4) [1.5] (1,5) (1,6) (1,7) (1,8) (1,9)
-(2,0) (2,1) (2,2) (2,3) (2,4) [1.5] (2,5) (2,6) (2,7) (2,8) (2,9)
-            (3,2) (3,3) (3,4) [1.5] (3,5) (3,6) (3,7) (3,8)
+(0,0) (0,1) (0,2) (0,3) (0,4) (0,5) [2.5] (0,6) (0,7) (0,8) (0,9)(0,10)(0,11)(0,12)
+(1,0) (1,1) (1,2) (1,3) (1,4) (1,5) [2.5] (1,7) (1,8) (1,9)(1,10)(1,11)(1,12)
+(2,0) (2,1) (2,2) (2,3) (2,4) (2,5) [2.5] (2,7) (2,8) (2,9)(2,10)(2,11)(2,12)
+(3,0) (3,1) (3,2) (3,3) (3,4) (3,5) [3.5]3(3,8)(3,9)(3,10)(3,11)(3,12)
 """
 
 [keymap]
 layers = 8
 [[keymap.layer]]
 keys = """
-Q W E R T Y U I O P
-A S D F G H J K L Enter
-Z X C V B N M Comma Dot Delete
-LAlt LShift Space MO(1) LT(2, Space) RAlt Left
+Esc Q W E R T Y U I O P Delete Backspace
+Tab A S D F G H J K L Semicolon Enter
+LShift Z X C V B N M Comma Dot Up Right
+LCtrl LGui LAlt Caps MO(1) LGui(E) Space MO(2)  Left Down Right
 """
 
 [[keymap.layer]]
 keys = """
-1 2 3 4 5 6 7 8 9 0
-_ _ _ _ _ _ _ _ _ _
-_ _ _ _ _ _ _ _ _ _
-_ _ _ _ _ _ _
+Grave 1 2 3 4 5 6 7 8 9 0 Delete Backspace
+_ _ _ _ _ _ _ _ _ _ _ _
+_ _ _ _ _ _ _ _ _ _ _ _
+_ _ _ _ _ _ _ _ _ _ _ 
 """
   
 
@@ -58,7 +58,7 @@ insecure=true
 
 # Unlock keys for Vial security (optional)
 # Keys must be pressed simultaneously to unlock Vial configuration
-unlock_keys = [[0, 0], [0, 1]]  # Keys at (row=0,col=0) and (row=0,col=1)
+#iunlock_keys = [[0, 0], [0, 1]]  # Keys at (row=0,col=0) and (row=0,col=1)
 
 [storage]
 # Storage feature is enabled by default
