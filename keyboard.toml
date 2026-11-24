@@ -15,18 +15,26 @@ col_pins = ["PIN_0", "PIN_1", "PIN_2", "PIN_3", "PIN_4", "PIN_5", "PIN_29", "PIN
 [layout]
 rows = 4
 cols = 13
-# 下沉40旋钮: the EC11 knob sits in the middle of the sunken bottom row, at the
-# (3,6)/(3,7) cells of 下沉40旋钮.json. It is rendered as a rotary knob (e,0).
-# The 48 key positions are exactly the ones used before, in the same order.
+# Two layouts share this board:
+#   * 下沉40          - 48 keys, NO knob (this is the default layout). The 3,5 key
+#                       sits in the sunken bottom row, exactly like 下沉40.json.
+#   * 下沉编码器40    - the same 48 keys in the same order, plus the EC11 knob at
+#                       the bottom centre and 3,5 nudged 0.25u down, exactly like
+#                       下沉编码器40.json. It is offered as the second choice of the
+#                       "旋钮配列" layout option in vial.json.
+# RMK layout variants can hide keys but not an encoder token, so the firmware's own
+# render always shows the default (knob-less) 下沉40 layout: there is no (e,0)
+# token below. The encoder stays fully functional - see [[input_device.encoder]]
+# and the per-layer `encoders` bindings.
 map = """
-(0,0) (0,1) (0,2) (0,3) (0,4) (0,5) (0,6) (0,7) (0,8) (0,9) (0,10) (0,11) (0,12)
-(1,0) (1,1) (1,2) (1,3) (1,4) (1,5) (1,7) (1,8) (1,9) (1,10) (1,11) (1,12)
-(2,0) (2,1) (2,2) (2,3) (2,4) (2,5) (2,7) (2,8) (2,9) (2,10) (2,11) (2,12)
-(3,0) (3,1) (3,2) (3,3,)(3,4) (3,5)(e,0)(3,8) (3,9)(3,10) (3,11) (3,12)
-
+(0,0) (0,1) (0,2) (0,3) (0,4) (0,5) [1.5] (0,6) (0,7) (0,8) (0,9) (0,10) (0,11) (0,12)
+(1,0,@1.25u) (1,1) (1,2) (1,3) (1,4) (1,5) [1.5] (1,7) (1,8) (1,9) (1,10) (1,11) (1,12,@1.75u)
+(2,0,@1.5u) (2,1) (2,2) (2,3) (2,4) (2,5) [1.75] (2,7) (2,8) (2,9) (2,10) (2,11) (2,12,@1.25u)
+[0.25] (3,0) (3,1) (3,2) [8.0] (3,10) (3,11) (3,12)
+[y=-0.75] [3.5] (3,3,@1.25u) (3,4,@2u) (3,5) (3,8,@1.25u) (3,9,@2u)
 """
 
-# EC11 rotary encoder: A -> PIN_7, B -> PIN_6
+# EC11 rotary encoder (下沉编码器40): EC110A -> PIN_7, EC110B -> PIN_6
 [[input_device.encoder]]
 pin_a = "PIN_7"
 pin_b = "PIN_6"
@@ -61,7 +69,7 @@ _ _ _ _ _ _ _ _ _ _ _ _
 _ _ _ _ _ _ _ _ _ _ _ 
 """
 encoders = [["AudioVolUp", "AudioVolDown"]]
-  
+
 
 [rmk]
 # Maximum number of combos keyboard can store
