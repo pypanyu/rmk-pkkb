@@ -17,11 +17,13 @@ rows = 4
 cols = 13
 # Two layouts share this board:
 #   * 下沉40          - 48 keys, NO knob (this is the default layout). The 3,5 key
-#                       sits in the sunken bottom row, exactly like 下沉40.json.
+#                       sits in the sunken bottom row (3,3=1.25u, 3,4=2u, 3,5=1u,
+#                       3,8=2u, 3,9=1.25u), exactly like 下沉40.json.
 #   * 下沉编码器40    - the same 48 keys in the same order, plus the EC11 knob at
-#                       the bottom centre and 3,5 nudged 0.25u down, exactly like
-#                       下沉编码器40.json. It is offered as the second choice of the
-#                       "旋钮配列" layout option in vial.json.
+#                       the bottom centre: 3,5 moves to its own row 1u lower (y=4.25)
+#                       and the knob sits at y=5.25, exactly like 下沉编码器40.json.
+#                       It is offered as the second choice of the "旋钮配列" layout
+#                       option in vial.json.
 # RMK layout variants can hide keys but not an encoder token, so the firmware's own
 # render always shows the default (knob-less) 下沉40 layout: there is no (e,0)
 # token below. The encoder stays fully functional - see [[input_device.encoder]]
@@ -31,7 +33,7 @@ map = """
 (1,0,@1.25u) (1,1) (1,2) (1,3) (1,4) (1,5) [1.5] (1,7) (1,8) (1,9) (1,10) (1,11) (1,12,@1.75u)
 (2,0,@1.5u) (2,1) (2,2) (2,3) (2,4) (2,5) [1.75] (2,7) (2,8) (2,9) (2,10) (2,11) (2,12,@1.25u)
 [0.25] (3,0) (3,1) (3,2) [8.0] (3,10) (3,11) (3,12)
-[y=-0.75] [3.5] (3,3,@1.25u) (3,4,@2u) (3,5) (3,8,@1.25u) (3,9,@2u)
+[y=-0.75] [3.5] (3,3,@1.25u) (3,4,@2u) (3,5) (3,8,@2u) (3,9,@1.25u)
 """
 
 # EC11 rotary encoder (下沉编码器40): EC110A -> PIN_7, EC110B -> PIN_6
@@ -56,7 +58,7 @@ keys = """
 Esc Q W E R T Y U I O P Delete Backspace
 Tab A S D F G H J K L Semicolon Enter
 LShift Z X C V B N M Comma Dot Up Right
-LCtrl LGui LAlt Caps MO(1) MT(E, LGui) Space MO(2)  Left Down Right
+LCtrl LGui LAlt Caps MO(1) LGui Space MO(2)  Left Down Right
 """
 # Knob: clockwise = volume up, counter-clockwise = volume down
 encoders = [["AudioVolUp", "AudioVolDown"]]
